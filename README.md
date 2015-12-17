@@ -4,19 +4,11 @@
 
 This is my implementation of the voting application, which is the 1st basejump on freecodecamp
 
-## Versions
-
-There are 3 versions of Clementine.js:
-
-- [**Standard**](https://github.com/johnstonbl01/clementinejs): the simplest version of Clementine.js. Intended for those who wish for the smallest and least intrusive footprint OR to implement features on their own.
-- [**Angular**](https://github.com/johnstonbl01/clementinejs-angular): a slightly more complex version of the same application. This version employs the use of AngularJS as the front-end framework.
-- **Free Code Camp (FCC)** (this version): A modified version of the standard boilerplate that is intended for use with the [Free Code Camp](http://freecodecamp.com/) curriculum.
-
 # Quick Start Guide
 
 ### Prerequisites
 
-In order to use Clementine.js, you must have the following installed:
+In order to use the voting application, you must have the following installed:
 
 - [Node.js](https://nodejs.org/)
 - [NPM](https://nodejs.org/)
@@ -25,13 +17,13 @@ In order to use Clementine.js, you must have the following installed:
 
 ### Installation & Startup
 
-To install Clementine.js, simply enter the below in the terminal window:
+To install the voting app, simply enter the below in the terminal window:
 
 ```bash
-$ git clone https://github.com/johnstonbl01/clementinejs-fcc.git your-project
+$ git clone https://github.com/paycoguy/voting-app.git your-project
 ```
 
-This will install the Clementine.js components into the `your-project` directory.
+This will install the voting app components into the `your-project` directory.
 
 ### Setup GitHub Authentication
 
@@ -61,32 +53,16 @@ Node.js listening on port 8080...
 
 Next, open your browser and enter `http://localhost:8080/`. Congrats, you're up and running!
 
-### c9.io Setup
-
-If you're using c9.io, please [reference the documentation](http://www.clementinejs.com/versions/fcc.html#c9.ioSetup) for instructions to get Clementine.js working in the c9 environment.
-
-## Contributing
-
-This is an open-source project, and contributions are always welcome! To see ways to contribute, please review the [contribution guidelines](http://www.clementinejs.com/developers/contributing.html).
-
-## Documentation
-
-Complete documentation can be [found here](http://www.clementinejs.com).
-
-### Tutorial
-
-You can find a complete step-by-step tutorial on how to create this app from the ground up [here](http://www.clementinejs.com/tutorials/tutorial-passport.html).
-
 ## Features
 
-| Features           | Standard  | Angular   | FCC       |
-|:---------          |:--------: |:--------: |:---------:|
-| MongoDB            | _Yes_     | _Yes_     | _Yes_     |
-| Express            | _Yes_     | _Yes_     | _Yes_     |
-| AngularJS (1.x)    | _No_      | _Yes_     | _No_      |
-| Node.js            | _Yes_     | _Yes_     | _Yes_     |
-| Passport           | _No_      | _No_      | _Yes_     |
-| Mongoose           | _No_      | _No_      | _Yes_     |
+| Features 
+|:---------         
+| MongoDB           
+| Express  
+| React  
+| Node.js         
+| Passport         
+| Mongoose        
 
 ## License
 
