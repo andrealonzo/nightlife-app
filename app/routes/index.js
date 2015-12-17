@@ -9,15 +9,23 @@ module.exports = function (app, passport) {
 		if (req.isAuthenticated()) {
 			return next();
 		} else {
-			res.redirect('/login');
+			res.redirect('/main');
 		}
 	}
 
 	var clickHandler = new ClickHandler();
+	
 
 	app.route('/')
 		.get(isLoggedIn, function (req, res) {
 			res.sendFile(path + '/public/index.html');
+		});
+		
+		
+
+	app.route('/main')
+		.get(function (req, res) {
+			res.sendFile(path + '/public/main.html');
 		});
 
 	app.route('/login')
