@@ -13,6 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="public/js/ajax-functions.js"></script>
 	</head>
 
 	<body>
@@ -61,6 +62,7 @@
 
 <script type="text/babel">
 
+
   
   
   var PollContainer = React.createClass({
@@ -78,8 +80,15 @@
       this.setState(this.state.poll.options);
     },
     handleSubmit:function(e){
+      var pollApiUrl = "/api/15024773/polls";
       e.preventDefault();
-      console.log("Submitting this poll", this.state.poll);
+     ajaxRequest (
+           'POST', 
+           pollApiUrl,
+          function(data){
+            console.log("submitted this poll", data);
+           }.bind(this)
+           );
     },
     handlePollNameChange:function(e){
       this.state.poll.pollName = e.target.value;
@@ -87,7 +96,6 @@
     },
     getInitialState: function() {
       return {
-        
           poll:{pollName:"",
           options: 
             [{placeholder:'Coke', value:""}, 

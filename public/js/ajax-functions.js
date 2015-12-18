@@ -1,12 +1,13 @@
 'use strict';
 
-function ajaxRequest (method, url, callback) {
+function ajaxRequest (method, url, callback, data) {
     $.ajax({
                 url:  url,
                 dataType: 'json',
+                data: data,
                 type: method,
-                success:  function(data){
-                 callback(data);
+                success:  function(successData){
+                 callback(successData);
                 },
                 error: function(xhr, status, err){
                     console.error(url, status, err.toString());  
