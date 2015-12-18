@@ -84,10 +84,54 @@ var PollApp = React.createClass({
 });
  
   var MyPolls = React.createClass({
+    loadPolls: function(){
+      var pollApiUrl = "/api/15024773/polls";
+      $.getJSON( pollApiUrl, 
+          function(data){
+              console.log('retrieved polls', data);
+             this.setState({polls:data});
+          }.bind(this)
+      );
+    },
+    getInitialState: function() {
+      
+      return {polls:[]};
+          
+    },
+    componentDidMount:function(){
+      this.loadPolls();
+    },
+    createPoll:function(poll, index){
+      return(
+         <div key = {index} className = "row">
+          <div className= "col-xs-4">
+          {poll.name}
+          </div>
+          <div className= "col-xs-8">
+          <button type="button" onClick = {this.handleDeletePollClick.bind(this,poll)} className="btn btn-danger">Delete</button>
+          </div>
+        </div>
+         );
+    },
+    handleDeletePollClick:function(poll){
+      console.log("clicked", poll._id);
+      
+      var pollApiUrl = "/api/15024773/polls";
+      $.ajax({
+                url:  pollApiUrl,
+                dataType: 'json',
+                data: poll,
+                type: 'DELETE',
+                success:  function(successData){
+                 this.loadPolls();
+                }.bind(this)
+      }
+      );
+    },
     render:function(){
       return(
         <div>
-        These are my polls
+         {this.state.polls.map(this.createPoll)}
         </div>
         );
     }
@@ -116,12 +160,12 @@ var PollApp = React.createClass({
           });
     },
     handlePollNameChange:function(e){
-      this.state.poll.pollName = e.target.value;
+      this.state.poll.name = e.target.value;
       this.setState(this.state.poll);
     },
     getInitialState: function() {
       return {
-          poll:{pollName:"",
+          poll:{name:"",
           options: 
             [{placeholder:'Coke', value:""}, 
             {placeholder:'Pepsi', value:""}]
@@ -133,8 +177,8 @@ var PollApp = React.createClass({
         <h1>New Poll</h1>
 			    <form onSubmit={this.handleSubmit}>
   <div className="form-group">
-    <label htmlFor="pollName">Name your poll</label>
-    <input type="text" className="form-control" id="pollName" placeholder="What is your favorite brand?" onChange={this.handlePollNameChange} value={this.state.poll.pollName}/>
+    <label htmlFor="name">Name your poll</label>
+    <input type="text" className="form-control" id="name" placeholder="What is your favorite brand?" onChange={this.handlePollNameChange} value={this.state.poll.name}/>
   </div>
    <div className="form-group">
         <label htmlFor="options">Options</label>
