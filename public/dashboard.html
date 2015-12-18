@@ -17,6 +17,7 @@
 	</head>
 
 	<body>
+	  
 	    <nav class="navbar navbar-default">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -44,28 +45,55 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-		<div class="container-fluid text-center">
-		    <div class="jumbotron">
-              <h1>Dashboard</h1>
-              <p>What would you like to do today?
-              </p>
-              <p><a class="btn btn-primary btn-lg" href="/login" role="button">New Poll</a><a class="btn btn-primary btn-lg" href="/login" role="button">My Polls</a></p>
-            </div>
-			  <div>
-			    </div>
-			    <div id = "pollWrapper" class="container-fluid">
-			    
-</div>
-			    
-			  </div>
+		<div id="pollApp" class="container-fluid text-center">
+		    
 		</div>
 
 <script type="text/babel">
 
-
+var PollApp = React.createClass({
   
+  getInitialState: function() {
+      return { showNewPoll: true };
+  },
+  handleNewPollClick: function() {
+      this.setState({ showNewPoll: true });
+  },
+  handleMyPollsClick: function() {
+      this.setState({ showNewPoll: false });
+  },
+  render:function(){
+    return(
+      <div>
+        <div className="jumbotron">
+          <h1>Dashboard</h1>
+          <p>
+            What would you like to do today?
+          </p>
+          <p>
+            <a className="btn btn-primary btn-lg" onClick = {this.handleNewPollClick} role="button">New Poll</a>
+            <a className="btn btn-primary btn-lg" onClick = {this.handleMyPollsClick} role="button">My Polls</a>
+          </p>
+        </div>
+        { this.state.showNewPoll ? <NewPoll/>  : <MyPolls/> }
+      </div>
+      
+      );
+  }
   
-  var PollContainer = React.createClass({
+});
+ 
+  var MyPolls = React.createClass({
+    render:function(){
+      return(
+        <div>
+        These are my polls
+        </div>
+        );
+    }
+  });
+  
+  var NewPoll = React.createClass({
     handleOptionChange:function(optionsIndex, event){
        this.state.poll.options[optionsIndex].value = event.target.value;
       this.setState(this.state.poll.options);
@@ -82,13 +110,10 @@
     handleSubmit:function(e){
       var pollApiUrl = "/api/15024773/polls";
       e.preventDefault();
-     ajaxRequest (
-           'POST', 
-           pollApiUrl,
+      $.post( pollApiUrl, this.state.poll, 
           function(data){
-            console.log("submitted this poll", data);
-           }.bind(this)
-           );
+              console.log('Poll successfully submitted', data);
+          });
     },
     handlePollNameChange:function(e){
       this.state.poll.pollName = e.target.value;
@@ -128,11 +153,12 @@
     }
   });
   
-   ReactDOM.render(
-       <PollContainer/>,
-       document.getElementById('pollWrapper')
-       );
-       
+      
+        ReactDOM.render(
+      <PollApp/>,
+      document.getElementById('pollApp')
+      );
+  
 </script>		
 	</body>
 

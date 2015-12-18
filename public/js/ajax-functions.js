@@ -4,7 +4,7 @@ function ajaxRequest (method, url, callback, data) {
     $.ajax({
                 url:  url,
                 dataType: 'json',
-                data: data,
+                data: JSON.stringify(data),
                 type: method,
                 success:  function(successData){
                  callback(successData);
