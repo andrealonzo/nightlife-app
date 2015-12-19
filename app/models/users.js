@@ -16,7 +16,12 @@ var User = new Schema({
    polls:[
        {
            name: String,
-           options:[String]
+           options:[
+              {
+                 name:String,
+                 numVotes:Number
+              }
+              ]
        }
        ]
 });

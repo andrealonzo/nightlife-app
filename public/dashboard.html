@@ -3,7 +3,7 @@
 <html>
 
 	<head >
-		<title>Voting App</title>
+		<title>Poll App</title>
 		
 		<link href="/public/css/main.css" rel="stylesheet" type="text/css">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,26 +52,38 @@
 <script type="text/babel">
 
 var PollAddSuccess = React.createClass({
+  getInitialState:function(){
+    return{pollUrl:null};
+  },
   render:function(){
+    var pollUrl = "https://voting-app-paycoguy.c9users.io/vote?id="+this.props.pollId;
     return(
       <div>
       <h1>Congratulations!  Your poll has been created.  Access your poll below</h1>
-      <h2><a href="http://www.google.com">http://www.google.com</a></h2>
+      <a href={pollUrl}>
+      {pollUrl}
+      </a>
       </div>
       );
   }
 })
 
 var PollApp = React.createClass({
-  
+  getMyPage:function(){
+    console.log("in here");
+  },
   getInitialState: function() {
-      return { showNewPoll: true };
+      return { showPage: "newPoll" };
   },
   handleNewPollClick: function() {
-      this.setState({ showNewPoll: true });
+      this.setState({ showPage: "newPoll" });
   },
   handleMyPollsClick: function() {
-      this.setState({ showNewPoll: false });
+      this.setState({ showPage: "myPolls" });
+  },
+  handleAddNewPoll:function(poll){
+    this.setState({pollId:poll._id, showPage:"addedNewPoll"});
+    console.log("newPollAdded", poll);
   },
   render:function(){
     return(
@@ -89,7 +101,11 @@ var PollApp = React.createClass({
         <div className="row">
         <div className="col-md-4"></div>
         <div className="col-md-4">
-        { this.state.showNewPoll ? <NewPoll/>  : <MyPolls/> }
+        
+        { 
+          this.state.showPage === "newPoll" ? <NewPoll onAddNewPoll={this.handleAddNewPoll}/>  : 
+          this.state.showPage === "myPolls" ? <MyPolls/> : 
+          <PollAddSuccess pollId = {this.state.pollId}/>}
         </div>
         <div className="col-md-4"></div>
         
@@ -130,7 +146,6 @@ var PollApp = React.createClass({
          );
     },
     handleDeletePollClick:function(poll){
-      
       var pollApiUrl = "/api/15024773/polls";
       $.ajax({
                 url:  pollApiUrl,
@@ -167,12 +182,13 @@ var PollApp = React.createClass({
       this.setState(this.state.poll.options);
     },
     handleSubmit:function(e){
+      this.setState({showPage:"newPollAdded"});
       var pollApiUrl = "/api/15024773/polls";
       e.preventDefault();
       $.post( pollApiUrl, this.state.poll, 
           function(data){
-              console.log('Poll successfully submitted', data);
-          });
+              this.props.onAddNewPoll(data);
+          }.bind(this));
     },
     handlePollNameChange:function(e){
       this.state.poll.name = e.target.value;
@@ -213,9 +229,6 @@ var PollApp = React.createClass({
     }
   });
   
-  
-  
-      
         ReactDOM.render(
       <PollApp/>,
       document.getElementById('pollApp')
