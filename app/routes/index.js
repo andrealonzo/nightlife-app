@@ -85,4 +85,8 @@ module.exports = function (app, passport) {
 		.get(function (req, res) {
 			res.sendFile(path + '/public/vote.html');
 		});
+	app.route('/test')
+		.get(function (req, res) {
+			res.sendFile(path + '/public/test.html');
+		});
 };
