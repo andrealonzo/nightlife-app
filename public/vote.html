@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head >
+		<title>Poll App</title>
+		
+		<link href="/public/css/main.css" rel="stylesheet" type="text/css">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="public/js/ajax-functions.js"></script>
+	</head>
+
+	<body>
+	  
+	    <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Poll Plex</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
+ 
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><p class="navbar-text">Hello Username</p></li>
+        <li><a href="#">Settings</a></li>
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+		<div id="pollApp" class="container-fluid text-center">
+		    
+		</div>
+
+<script type="text/babel">
+
+var PollApp = React.createClass({
+    loadPoll:function(){
+        
+    },
+    componentDidMount:function(){
+      this.loadPoll();
+    },
+    handlePollSubmit:function(optionSelected){
+        var voteApiUrl = "/api/vote";
+        console.log("poll submitted",optionSelected);
+        console.log("poll state",this.state);
+        var vote = {name:this.state.poll.name, optionSelected: optionSelected};
+         $.post( voteApiUrl, vote, 
+          function(data){
+              console.log("Vote successfully submitted", data);
+          }.bind(this));
+    },
+    
+      getInitialState: function() {
+          return { 
+              poll:{
+                  name:'This is the name of the poll',
+                  options:['COke?', 'Pepsi?']
+              } };
+      },
+      render:function(){
+        return(
+          <div>
+            <div className="row">
+            <div className="col-md-4"></div>
+            <div className="col-md-4">
+            <PollVote poll={this.state.poll} onSubmit={this.handlePollSubmit}/>
+            </div>
+            <div className="col-md-4"></div>
+            </div>
+          </div>
+      
+      );
+  }
+  
+});
+ 
+  
+  var PollVote = React.createClass({
+    handleSubmit:function(e){
+        e.preventDefault();
+       this.props.onSubmit(this.state.selectedOption);
+    },
+    handleOnChange:function(e){
+      this.setState({selectedOption:e.target.value});
+    },
+    createOption:function(option, index){
+        return(
+            <div key = {index} className="radio">
+              <label>
+                <input  type="radio" name="optionsRadios" id="optionsRadios1" value={option} onChange={this.handleOnChange}></input>
+                {option}
+              </label>
+            </div>
+            
+            );
+    },
+    render:function(){
+      return(
+<div>
+      
+    <h1>{this.props.poll.name}</h1>
+    <form onSubmit={this.handleSubmit}>
+    <div className="text-left">
+       {this.props.poll.options.map(this.createOption) }
+    </div>
+        <button type="submit" className="btn btn-primary btn-block">Vote</button>
+    
+        <div>Sorry no comments yet</div>
+    </form>
+</div>
+        );
+    }
+  });
+  
+        ReactDOM.render(
+      <PollApp/>,
+      document.getElementById('pollApp')
+      );
+  
+</script>		
+	</body>
+
+</html>
+
