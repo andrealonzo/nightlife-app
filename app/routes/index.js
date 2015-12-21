@@ -72,12 +72,16 @@ module.exports = function (app, passport) {
 		.get(isLoggedIn, clickHandler.getClicks)
 		.post(isLoggedIn, clickHandler.addClick)
 		.delete(isLoggedIn, clickHandler.resetClicks);
+		
+		
 	
 	app.route('/api/:id/polls')
-		.get(isLoggedIn, pollHandler.getPolls)
+		.get(isLoggedIn,pollHandler.getPolls)
 		.post(isLoggedIn, pollHandler.addPoll)
 		.delete(isLoggedIn, pollHandler.deletePoll);
 		
+	app.route('/openapi/getPoll')
+		.get(pollHandler.getPolls);
 		
 	app.route('/api/vote')
 		.post(voteHandler.addVote);

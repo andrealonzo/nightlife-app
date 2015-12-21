@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 'use strict'
 var React = require("react");
+var pollAppUrl = window.location.origin;
 module.exports = React.createClass({
     loadPolls: function(){
       var pollApiUrl = "/api/15024773/polls";
@@ -20,8 +21,9 @@ module.exports = React.createClass({
     createPoll:function(poll, index){
       return(
          <li key = {index} className="list-group-item text-right">
+         <a href = {pollAppUrl + "/vote?id="+poll._id} target = "_blank">
           <div className="pull-left">{poll.name}</div>
-
+        </a>
           <button type="button" onClick = {this.handleDeletePollClick.bind(this,poll)} className="btn btn-danger">
      delete 
           </button>

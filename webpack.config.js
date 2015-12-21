@@ -1,7 +1,8 @@
 module.exports = {
     entry: {
         login:"./app/src/components/Login.jsx",
-        dashboard:"./app/src/components/Dashboard.jsx"
+        dashboard:"./app/src/components/Dashboard.jsx",
+        vote:"./app/src/components/Vote.jsx"
     },
     output: {
         path: __dirname,

@@ -254,6 +254,7 @@
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(3);
+	var pollAppUrl = window.location.origin;
 	module.exports = React.createClass({displayName: "module.exports",
 	    loadPolls: function(){
 	      var pollApiUrl = "/api/15024773/polls";
@@ -273,8 +274,9 @@
 	    createPoll:function(poll, index){
 	      return(
 	         React.createElement("li", {key: index, className: "list-group-item text-right"}, 
-	          React.createElement("div", {className: "pull-left"}, poll.name), 
-
+	         React.createElement("a", {href: pollAppUrl + "/vote?id="+poll._id, target: "_blank"}, 
+	          React.createElement("div", {className: "pull-left"}, poll.name)
+	        ), 
 	          React.createElement("button", {type: "button", onClick: this.handleDeletePollClick.bind(this,poll), className: "btn btn-danger"}, 
 	     "delete" 
 	          )
@@ -320,7 +322,7 @@
 	    return(
 	      React.createElement("div", null, 
 	      React.createElement("h1", null, "Congratulations!  Your poll has been created.  Access your poll below"), 
-	      React.createElement("a", {href: pollUrl}, 
+	      React.createElement("a", {target: "_blank", href: pollUrl}, 
 	      pollUrl
 	      )
 	      )
