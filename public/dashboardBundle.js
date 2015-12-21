@@ -178,17 +178,20 @@
 	var React = __webpack_require__(3);
 	module.exports = React.createClass({displayName: "module.exports",
 	    handleOptionChange:function(optionsIndex, event){
-	       this.state.poll.options[optionsIndex].name = event.target.value;
+	      this.state.poll.options[optionsIndex].name = event.target.value;
 	      this.setState(this.state.poll.options);
+	      //checks if all fields are filled in
+	      this.validate();
 	    },
 	    createOption:function(option, index) {
 	      return  React.createElement("input", {type: "text", key: index, className: "form-control", id: "option", onChange: this.handleOptionChange.bind(this,index), placeholder: option.placeholder, value: this.state.poll.options[index].name})
 	    },
 	    handleOptionsClick:function(e){
 	      e.preventDefault();
-	      var newOption = {placeholder:'New Option', id:this.state.poll.options.length, value:""};
+	      var newOption = {placeholder:'New Option', id:this.state.poll.options.length, name:""};
 	      this.state.poll.options.push(newOption);
 	      this.setState(this.state.poll.options);
+	      this.validate();
 	    },
 	    handleSubmit:function(e){
 	      e.preventDefault();
@@ -209,11 +212,39 @@
 	    handlePollNameChange:function(e){
 	      this.state.poll.name = e.target.value;
 	      this.setState(this.state.poll);
-	    },
+	      this.validate();
+	      
+	     },
+	     isPollNameFilled:function(){
+	       return( this.state.poll.name.trim() != "");
+	     },
+	     areOptionsFilled:function(){
+	       var allOptionsFilled = true;
+	       this.state.poll.options.map(
+	         function(option, index){
+	           console.log(option);
+	          if(option.name.trim()=="")
+	            allOptionsFilled = false;
+	       });
+	       return allOptionsFilled;
+	     },
+	     validate:function(){
+
+	      if(this.isPollNameFilled() && this.areOptionsFilled() ){
+	        if(this.state.disableSubmit == "disabled"){
+	          this.setState({disableSubmit : "" });
+	        }
+	      }
+	      else{
+	        if(this.state.disableSubmit == ""){
+	          this.setState({disableSubmit: "disabled" });
+	        }
+	      }
+	     },
 	    getInitialState: function() {
 	      
 	      
-	       return {
+	       return {disableSubmit:"disabled",
 	           poll:{name:"",
 	           options: 
 	             [{placeholder:'Coke', name:""}, 
@@ -239,7 +270,7 @@
 	React.createElement("button", {type: "button", className: "btn btn-default  btn-block", onClick: this.handleOptionsClick}, "More Options")
 	  ), 
 	  React.createElement("div", null, 
-	  React.createElement("button", {type: "submit", className: "btn btn-primary  btn-block"}, "Submit")
+	  React.createElement("button", {type: "submit", className: "btn btn-primary  btn-block", disabled: this.state.disableSubmit}, "Submit")
 	  )
 	)
 	)
