@@ -83,12 +83,12 @@
 	        React.createElement("span", {className: "icon-bar"}), 
 	        React.createElement("span", {className: "icon-bar"})
 	      ), 
-	      React.createElement("a", {className: "navbar-brand", href: "#"}, "Poll Plex")
+	      React.createElement("a", {className: "navbar-brand", href: "/"}, "Poll Plex")
 	    ), 
 
 	    React.createElement("div", {className: "collapse navbar-collapse", id: "bs-example-navbar-collapse-1"}, 
 	      React.createElement("ul", {className: "nav navbar-nav"}, 
-	        React.createElement("li", {className: "active"}, React.createElement("a", {href: "#"}, "Home ", React.createElement("span", {className: "sr-only"}, "(current)")))
+	        React.createElement("li", {className: "active"}, React.createElement("a", {href: "/"}, "Home ", React.createElement("span", {className: "sr-only"}, "(current)")))
 	 
 	      ), 
 	      React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
@@ -178,11 +178,11 @@
 	var React = __webpack_require__(3);
 	module.exports = React.createClass({displayName: "module.exports",
 	    handleOptionChange:function(optionsIndex, event){
-	       this.state.poll.options[optionsIndex].value = event.target.value;
+	       this.state.poll.options[optionsIndex].name = event.target.value;
 	      this.setState(this.state.poll.options);
 	    },
 	    createOption:function(option, index) {
-	      return  React.createElement("input", {type: "text", key: index, className: "form-control", id: "option", onChange: this.handleOptionChange.bind(this,index), placeholder: option.placeholder, value: this.state.poll.options[index].value})
+	      return  React.createElement("input", {type: "text", key: index, className: "form-control", id: "option", onChange: this.handleOptionChange.bind(this,index), placeholder: option.placeholder, value: this.state.poll.options[index].name})
 	    },
 	    handleOptionsClick:function(e){
 	      e.preventDefault();
@@ -191,26 +191,35 @@
 	      this.setState(this.state.poll.options);
 	    },
 	    handleSubmit:function(e){
+	      e.preventDefault();
 	      this.setState({showPage:"newPollAdded"});
 	      var pollApiUrl = "/api/15024773/polls";
-	      e.preventDefault();
-	      $.post( pollApiUrl, this.state.poll, 
-	          function(data){
-	              this.props.onAddNewPoll(data);
-	          }.bind(this));
+	      console.log("about to post this poll", JSON.stringify(this.state.poll));
+	      $.ajax({
+	          type: "POST",
+	          url: pollApiUrl,
+	          data: JSON.stringify(this.state.poll),
+	          contentType: "application/json",
+	          success: function(data){
+	                      this.props.onAddNewPoll(data);
+	                  }.bind(this),
+	          dataType: 'json'
+	        });
 	    },
 	    handlePollNameChange:function(e){
 	      this.state.poll.name = e.target.value;
 	      this.setState(this.state.poll);
 	    },
 	    getInitialState: function() {
-	      return {
-	          poll:{name:"",
-	          options: 
-	            [{placeholder:'Coke', value:""}, 
-	            {placeholder:'Pepsi', value:""}]
-	          }
-	      };
+	      
+	      
+	       return {
+	           poll:{name:"",
+	           options: 
+	             [{placeholder:'Coke', name:""}, 
+	             {placeholder:'Pepsi', name:""}]
+	           }
+	       };
 	    },
 	    render:function(){
 	      return(React.createElement("div", null, 
@@ -301,12 +310,13 @@
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(3);
+	var pollAppUrl = window.location.origin;
 	module.exports = React.createClass({displayName: "module.exports",
 	  getInitialState:function(){
 	    return{pollUrl:null};
 	  },
 	  render:function(){
-	    var pollUrl = "https://voting-app-paycoguy.c9users.io/vote?id="+this.props.pollId;
+	    var pollUrl = pollAppUrl + "/vote?id="+this.props.pollId;
 	    return(
 	      React.createElement("div", null, 
 	      React.createElement("h1", null, "Congratulations!  Your poll has been created.  Access your poll below"), 

@@ -3,11 +3,11 @@
 var React = require("react");
 module.exports = React.createClass({
     handleOptionChange:function(optionsIndex, event){
-       this.state.poll.options[optionsIndex].value = event.target.value;
+       this.state.poll.options[optionsIndex].name = event.target.value;
       this.setState(this.state.poll.options);
     },
     createOption:function(option, index) {
-      return  <input type="text" key={index} className="form-control" id="option"  onChange = {this.handleOptionChange.bind(this,index)} placeholder={option.placeholder} value = {this.state.poll.options[index].value}/>
+      return  <input type="text" key={index} className="form-control" id="option"  onChange = {this.handleOptionChange.bind(this,index)} placeholder={option.placeholder} value = {this.state.poll.options[index].name}/>
     },
     handleOptionsClick:function(e){
       e.preventDefault();
@@ -16,26 +16,35 @@ module.exports = React.createClass({
       this.setState(this.state.poll.options);
     },
     handleSubmit:function(e){
+      e.preventDefault();
       this.setState({showPage:"newPollAdded"});
       var pollApiUrl = "/api/15024773/polls";
-      e.preventDefault();
-      $.post( pollApiUrl, this.state.poll, 
-          function(data){
-              this.props.onAddNewPoll(data);
-          }.bind(this));
+      console.log("about to post this poll", JSON.stringify(this.state.poll));
+      $.ajax({
+          type: "POST",
+          url: pollApiUrl,
+          data: JSON.stringify(this.state.poll),
+          contentType: "application/json",
+          success: function(data){
+                      this.props.onAddNewPoll(data);
+                  }.bind(this),
+          dataType: 'json'
+        });
     },
     handlePollNameChange:function(e){
       this.state.poll.name = e.target.value;
       this.setState(this.state.poll);
     },
     getInitialState: function() {
-      return {
-          poll:{name:"",
-          options: 
-            [{placeholder:'Coke', value:""}, 
-            {placeholder:'Pepsi', value:""}]
-          }
-      };
+      
+      
+       return {
+           poll:{name:"",
+           options: 
+             [{placeholder:'Coke', name:""}, 
+             {placeholder:'Pepsi', name:""}]
+           }
+       };
     },
     render:function(){
       return(<div>

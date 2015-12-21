@@ -79,12 +79,12 @@
 	        React.createElement("span", {className: "icon-bar"}), 
 	        React.createElement("span", {className: "icon-bar"})
 	      ), 
-	      React.createElement("a", {className: "navbar-brand", href: "#"}, "Poll Plex")
+	      React.createElement("a", {className: "navbar-brand", href: "/"}, "Poll Plex")
 	    ), 
 
 	    React.createElement("div", {className: "collapse navbar-collapse", id: "bs-example-navbar-collapse-1"}, 
 	      React.createElement("ul", {className: "nav navbar-nav"}, 
-	        React.createElement("li", {className: "active"}, React.createElement("a", {href: "#"}, "Home ", React.createElement("span", {className: "sr-only"}, "(current)")))
+	        React.createElement("li", {className: "active"}, React.createElement("a", {href: "/"}, "Home ", React.createElement("span", {className: "sr-only"}, "(current)")))
 	 
 	      ), 
 	      React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 

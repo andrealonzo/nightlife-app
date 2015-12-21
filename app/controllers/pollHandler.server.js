@@ -1,6 +1,7 @@
 'use strict';
 
 var Users = require('../models/users.js');
+var Poll = require('../models/polls.js');
 var mongoose = require('mongoose');
 
 function PollHandler () {
@@ -19,14 +20,22 @@ function PollHandler () {
 	};
 
 	this.addPoll = function (req, res) {
+		
 		if(req.user.github.id){
-				var poll = req.body;
+
+				 var poll = req.body;
+				
 				Users
 			.findOneAndUpdate({ 'github.id': req.user.github.id }, { 
 				$push: { 'polls': poll  }
 			})
 			.exec(function (err, result) {
-					if (err) { throw err; }
+					if (err) { 
+						console.log(err);
+						
+						res.json({error:"There was an error adding poll"}); 
+						
+					}
 
 					res.json(result);
 				}
@@ -40,7 +49,6 @@ function PollHandler () {
 
 	this.deletePoll = function (req, res) {
 		var poll = req.body;
-		
 		Users.update( 
 			{ 'github.id': req.user.github.id }, 
 			{ $pull: { 'polls': {'_id': mongoose.Types.ObjectId((poll._id))}}},
@@ -49,18 +57,6 @@ function PollHandler () {
 				if(err) throw err;
 				res.json(poll);
 			});
-		
-		/*
-		Users
-			.findOneAndUpdate({ 'github.id': req.user.github.id }, { 'nbrClicks.clicks': 0 })
-			.exec(function (err, result) {
-					if (err) { throw err; }
-
-					res.json(result.nbrClicks);
-				}
-			);
-			
-			*/
 	};
 
 }

@@ -22,7 +22,7 @@ module.exports = function (app, passport) {
 
 	app.route('/')
 		.get(isLoggedIn, function (req, res) {
-			res.sendFile(path + '/public/index.html');
+			res.sendFile(path + '/public/dashboard.html');
 		});
 		
 		
@@ -77,6 +77,7 @@ module.exports = function (app, passport) {
 		.get(isLoggedIn, pollHandler.getPolls)
 		.post(isLoggedIn, pollHandler.addPoll)
 		.delete(isLoggedIn, pollHandler.deletePoll);
+		
 		
 	app.route('/api/vote')
 		.post(voteHandler.addVote);
