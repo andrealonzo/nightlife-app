@@ -1,8 +1,11 @@
 module.exports = {
-    entry: "./app/src/components/Login.jsx",
+    entry: {
+        login:"./app/src/components/Login.jsx",
+        dashboard:"./app/src/components/Dashboard.jsx"
+    },
     output: {
         path: __dirname,
-        filename: "./public/loginBundle.js"
+        filename: "./public/[name]Bundle.js"
     },
      module: {
         loaders: [

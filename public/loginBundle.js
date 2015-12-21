@@ -64,7 +64,9 @@
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/** @jsx React.DOM */var React = __webpack_require__(3);
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(3);
 	module.exports = React.createClass({displayName: "module.exports",
 			  render:function(){
 			    return(
