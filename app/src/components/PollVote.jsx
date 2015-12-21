@@ -8,6 +8,10 @@ module.exports = React.createClass({
     },
     handleOnChange:function(e){
       this.setState({selectedOption:e.target.value});
+      this.setState({disableSubmit:""});
+    },
+    getInitialState:function(){
+        return {disableSubmit:"disabled"};
     },
     createOption:function(option, index){
         return(
@@ -29,7 +33,7 @@ module.exports = React.createClass({
     <div className="text-left">
        {this.props.poll.options.map(this.createOption) }
     </div>
-        <button type="submit" className="btn btn-primary btn-block">Vote</button>
+        <button type="submit" className="btn btn-primary btn-block" disabled={this.state.disableSubmit}>Vote</button>
     
         <div>Sorry no comments yet</div>
     </form>

@@ -214,6 +214,10 @@
 	    },
 	    handleOnChange:function(e){
 	      this.setState({selectedOption:e.target.value});
+	      this.setState({disableSubmit:""});
+	    },
+	    getInitialState:function(){
+	        return {disableSubmit:"disabled"};
 	    },
 	    createOption:function(option, index){
 	        return(
@@ -235,7 +239,7 @@
 	    React.createElement("div", {className: "text-left"}, 
 	       this.props.poll.options.map(this.createOption)
 	    ), 
-	        React.createElement("button", {type: "submit", className: "btn btn-primary btn-block"}, "Vote"), 
+	        React.createElement("button", {type: "submit", className: "btn btn-primary btn-block", disabled: this.state.disableSubmit}, "Vote"), 
 	    
 	        React.createElement("div", null, "Sorry no comments yet")
 	    )
