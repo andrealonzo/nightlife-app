@@ -22,18 +22,7 @@ function VoteHandler () {
 					res.json(result);
 				}
 			);
-			
-		// console.log("adding vote", req.body);
-		// var id = req.body.id;
-		// var optionSelected = req.body.optionSelected;
-		// if(id && optionSelected)
-		// {
-		// 		res.json({});
-		// }
-		// else
-		// {
-		// 	res.json({error:"Invalid Vote"});
-		// }
+	
 	};
 
 
