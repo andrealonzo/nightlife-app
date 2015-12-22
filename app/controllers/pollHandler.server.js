@@ -1,65 +1,72 @@
 'use strict';
 
-var Users = require('../models/users.js');
+var Poll = require('../models/polls.js');
 var mongoose = require('mongoose');
 
 
 function PollHandler () {
-
+	this.handleError = function(err, res){
+		console.log("An error occurred", err);
+		res.json({error: "An error occurred"});
+	};
 	this.getPolls = function (req, res) {
 		if(req.query.id)
 		{
-			Users
-				.findOne({ 'polls._id':  mongoose.Types.ObjectId((req.query.id)) }, {'polls.$': 1})
+			console.log("Retrieving poll id", req.query.id);
+			//return one poll
+			Poll
+				.findOne({ '_id':  mongoose.Types.ObjectId((req.query.id)) })
 				.exec(function (err, result) {
-					if (err) { throw err; }
-					res.json(result.polls[0]);
+					if (err) { this.handleError(err,res); }
+					res.json(result);
+				});
+		}else if(req.user._id){
+			
+			//get all polls for a single user
+			Poll
+				.find({creator:mongoose.Types.ObjectId(req.user._id)})
+				.exec(function(err,result){
+					if (err) { this.handleError(err,res); }
+					res.json(result);
 				});
 		}else{
-			//return all polls for logged in user	
-	
-		Users
-			.findOne({ 'github.id': req.user.github.id }, { '_id': false })
-			.exec(function (err, result) {
-				if (err) { throw err; }
-
-				res.json(result.polls);
-			});
+			
+			this.handleError({error:"User Not Logged In"},res);
 		}	
 	};
 
 	this.addPoll = function (req, res) {
-		
-		if(req.user.github.id){
-				var poll = req.body;
-				Users
-			.findOneAndUpdate({ 'github.id': req.user.github.id }, { 
-				$push: { 'polls': poll  }
-			},{ 'new': true }).exec( function(err, result){
-					if (err) { 
-						console.log(err);
-						res.json({error:"There was an error adding poll"}); 
-					}
-					console.log("Adding this poll",result.polls[result.polls.length-1]);
-					res.json(result.polls[result.polls.length-1]);
-			});
-		
+		if(req.user._id){
+			var poll = new Poll(req.body);
+			poll.creator = req.user._id;
+			console.log("poll to add", poll);
+			poll.save(function (err, resPoll) {
+			if (err) return this.handleError(err,res);
+				console.log("Saved this poll",resPoll);
+	 			res.json(resPoll);
+			  // saved!
+			})
 		}
 		else{
-			res.json({error:"User Not Logged In"});
+			this.handleError({error:"User Not Logged In"},res);
 		}
 	};
 
 	this.deletePoll = function (req, res) {
-		var poll = req.body;
-		Users.update( 
-			{ 'github.id': req.user.github.id }, 
-			{ $pull: { 'polls': {'_id': mongoose.Types.ObjectId((poll._id))}}},
-			null,
-			function(err,data){
-				if(err) throw err;
-				res.json(poll);
-			});
+		if(req.user._id){
+			var poll = req.body;
+			Poll
+				.find({_id:poll._id,creator:mongoose.Types.ObjectId(req.user._id)})
+				.remove()
+				.exec(function(err,data){
+					if (err) return this.handleError(err,data);	
+					res.json(data);
+				});
+			
+		}
+		else{
+			this.handleError({error:"User Not Logged In"},res);
+		}
 	};
 
 }

@@ -1,32 +1,27 @@
 'use strict';
 
-var Users = require('../models/users.js');
-var Options = require('../models/options.js');
+var Polls = require('../models/polls.js');
 var mongoose = require('mongoose');
 
 function VoteHandler () {
 
+	this.handleError = function(err, res){
+		console.log("An error occurred", err);
+		res.json({error: "An error occurred"});
+	};
+	
 	this.addVote = function (req, res) {
-		console.log("voting for option", req.body._id);
-		Options.findById(req.body._id, function (err, doc){
-  console.log("found err", err);
-  console.log("found option", doc);
-		 });
-		// Users.findOneAndUpdate(
-		// 	{ 'polls.options._id':  mongoose.Types.ObjectId(req.body._id) },{'options.$':1},
-		// 	{ $inc: { 'numVotes': 1 }}
-		// 	)
-		// 	.exec(function (err, result) {
-		// 			if (err) { 
-		// 				console.log(err);
-		// 				res.json({error:"Error submitting vote"});
-						
-		// 			}else{
-		// 				console.log("Vote submitted successfully", result);
-		// 				res.json(result);
-		// 			}
-		// 		}
-		// 	);
+		console.log('adding vote for option id', req.body._id);
+		 Polls.findOneAndUpdate(
+			{ 'options._id':  mongoose.Types.ObjectId(req.body._id) },
+			{ $inc: { 'options.$.numVotes': 1 }}
+			)
+			.exec(function (err, result) {
+					if (err) { this.handleError(err,res); }
+					console.log("Vote submitted successfully", result);
+					res.json(result);
+				}
+			);
 			
 		// console.log("adding vote", req.body);
 		// var id = req.body.id;
