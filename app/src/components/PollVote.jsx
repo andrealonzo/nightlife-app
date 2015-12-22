@@ -4,20 +4,24 @@ var React = require('react')
 module.exports = React.createClass({
     handleSubmit:function(e){
         e.preventDefault();
-       this.props.onSubmit(this.state.selectedOption);
+        //find option
+        var option = $.grep(this.props.poll.options, function(e){ return e._id === this.state.selectedOptionId; }.bind(this));
+        console.log("submitting this option", option[0]);
+       this.props.onSubmit(option[0]);
     },
     handleOnChange:function(e){
-      this.setState({selectedOption:e.target.value});
+      this.setState({selectedOptionId:e.target.value});
       this.setState({disableSubmit:""});
     },
     getInitialState:function(){
         return {disableSubmit:"disabled"};
     },
     createOption:function(option, index){
+        console.log('creating this option', option);
         return(
             <div key = {index} className="radio">
               <label>
-                <input  type="radio" name="optionsRadios" id="optionsRadios1" value={option} onChange={this.handleOnChange}></input>
+                <input  type="radio" name="optionsRadios" id="optionsRadios1" value={option._id} onChange={this.handleOnChange}></input>
                 {option.name}
               </label>
             </div>

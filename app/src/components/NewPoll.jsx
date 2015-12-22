@@ -13,7 +13,7 @@ module.exports = React.createClass({
     },
     handleOptionsClick:function(e){
       e.preventDefault();
-      var newOption = {placeholder:'New Option', id:this.state.poll.options.length, name:""};
+      var newOption = {placeholder:'New Option', id:this.state.poll.options.length, name:"", numVotes:0};
       this.state.poll.options.push(newOption);
       this.setState(this.state.poll.options);
       this.validate();
@@ -72,8 +72,8 @@ module.exports = React.createClass({
        return {disableSubmit:"disabled",
            poll:{name:"",
            options: 
-             [{placeholder:'Coke', name:""}, 
-             {placeholder:'Pepsi', name:""}]
+             [{placeholder:'Coke', name:"", numVotes:0}, 
+             {placeholder:'Pepsi', name:"", numVotes:0}]
            }
        };
     },

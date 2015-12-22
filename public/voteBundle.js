@@ -166,12 +166,20 @@
 	    handlePollSubmit:function(optionSelected){
 	        var voteApiUrl = "/api/vote";
 	        console.log("poll submitted",optionSelected);
-	        console.log("poll state",this.state);
-	        var vote = {name:this.state.poll.name, optionSelected: optionSelected};
-	         $.post( voteApiUrl, vote, 
-	          function(data){
-	              console.log("Vote successfully submitted", data);
-	          }.bind(this));
+	        $.ajax({
+	          type: "POST",
+	          url: voteApiUrl,
+	          data: JSON.stringify(optionSelected),
+	          contentType: "application/json",
+	          success: function(data){
+	              console.log("Vote submitted", data);
+	            
+	                  }.bind(this),
+	          error: function(data){
+	             console.log("Error submitting vote", data);
+	                  }.bind(this),
+	          dataType: 'json'
+	        });
 	    },
 	    
 	      getInitialState: function() {
@@ -210,20 +218,24 @@
 	module.exports = React.createClass({displayName: "module.exports",
 	    handleSubmit:function(e){
 	        e.preventDefault();
-	       this.props.onSubmit(this.state.selectedOption);
+	        //find option
+	        var option = $.grep(this.props.poll.options, function(e){ return e._id === this.state.selectedOptionId; }.bind(this));
+	        console.log("submitting this option", option[0]);
+	       this.props.onSubmit(option[0]);
 	    },
 	    handleOnChange:function(e){
-	      this.setState({selectedOption:e.target.value});
+	      this.setState({selectedOptionId:e.target.value});
 	      this.setState({disableSubmit:""});
 	    },
 	    getInitialState:function(){
 	        return {disableSubmit:"disabled"};
 	    },
 	    createOption:function(option, index){
+	        console.log('creating this option', option);
 	        return(
 	            React.createElement("div", {key: index, className: "radio"}, 
 	              React.createElement("label", null, 
-	                React.createElement("input", {type: "radio", name: "optionsRadios", id: "optionsRadios1", value: option, onChange: this.handleOnChange}), 
+	                React.createElement("input", {type: "radio", name: "optionsRadios", id: "optionsRadios1", value: option._id, onChange: this.handleOnChange}), 
 	                option.name
 	              )
 	            )

@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var Poll = require('./polls').schema;
+var PollSchema = require('./polls').schema;
 var User = new Schema({
 	github: {
 		id: String,
@@ -13,7 +13,7 @@ var User = new Schema({
    nbrClicks: {
       clicks: Number
    },
-   polls:[Poll]
+   polls:[PollSchema]
 });
 
 module.exports = mongoose.model('User', User);

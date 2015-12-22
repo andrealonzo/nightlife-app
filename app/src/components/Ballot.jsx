@@ -32,12 +32,20 @@ module.exports =  React.createClass({
     handlePollSubmit:function(optionSelected){
         var voteApiUrl = "/api/vote";
         console.log("poll submitted",optionSelected);
-        console.log("poll state",this.state);
-        var vote = {name:this.state.poll.name, optionSelected: optionSelected};
-         $.post( voteApiUrl, vote, 
-          function(data){
-              console.log("Vote successfully submitted", data);
-          }.bind(this));
+        $.ajax({
+          type: "POST",
+          url: voteApiUrl,
+          data: JSON.stringify(optionSelected),
+          contentType: "application/json",
+          success: function(data){
+              console.log("Vote submitted", data);
+            
+                  }.bind(this),
+          error: function(data){
+             console.log("Error submitting vote", data);
+                  }.bind(this),
+          dataType: 'json'
+        });
     },
     
       getInitialState: function() {
