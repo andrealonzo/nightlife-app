@@ -48,11 +48,16 @@
 	'use strict'
 	var ReactDOM = __webpack_require__(1)
 	var Navigation = __webpack_require__(2)
-	 ReactDOM.render(
+	var MainApp = __webpack_require__(11)
+	ReactDOM.render(
 	        React.createElement(Navigation, null),
 	        document.getElementById('nav-container')
 	        );
-
+	ReactDOM.render(
+	      React.createElement(MainApp, null),
+	      document.getElementById('main')
+	      );
+	      
 
 /***/ },
 /* 1 */
@@ -127,6 +132,43 @@
 /***/ function(module, exports) {
 
 	module.exports = React;
+
+/***/ },
+/* 4 */,
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */,
+/* 9 */,
+/* 10 */,
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(3)
+
+	module.exports =  React.createClass({displayName: "module.exports",
+	    render:function(){
+	        return(
+	            
+	React.createElement("div", {className: "container-fluid text-center"}, 
+			    React.createElement("div", {className: "jumbotron"}, 
+	              React.createElement("h1", null, "Poll Plex"), 
+	              React.createElement("p", null, "Create custom polls with live results."), 
+	              React.createElement("p", null, React.createElement("a", {className: "btn btn-primary btn-lg", href: "/login", role: "button"}, "Sign Up"))
+	            ), 
+	            React.createElement("div", {className: "row"}, 
+	                React.createElement("div", {className: "col-md-4"}, 
+	                    React.createElement("h1", null, "Live Results"), "Live graphs show your poll results immediately in an easy to understand format. One graph will not provide the whole picture, that's why we provide multiple graph types to better describe your results."), 
+	                React.createElement("div", {className: "col-md-4"}, React.createElement("h1", null, "Works Everywhere"), "Traditional desktop computers now represent only 30% of Internet traffic. Your poll must work on the tablets, smart phones, netbooks and notebooks that your visitors are using. Our responsive designs do just that."), 
+	                React.createElement("div", {className: "col-md-4"}, React.createElement("h1", null, "Social Integration"), "Free integrated facebook or traditional comments allow your poll voters to provide immediate feedback and discuss results. Social share buttons encourage your poll voters to help spread the word.")
+	            )
+				
+			)
+	            );
+	    }
+	});
 
 /***/ }
 /******/ ]);

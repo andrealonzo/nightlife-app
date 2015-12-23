@@ -48,7 +48,7 @@
 	'use strict'
 	var ReactDOM = __webpack_require__(1)
 	var Navigation = __webpack_require__(2)
-	var Ballot = __webpack_require__(8)
+	var Ballot = __webpack_require__(12)
 	var pollId = getUrlVars().id;
 	ReactDOM.render(
 	        React.createElement(Navigation, null),
@@ -87,8 +87,29 @@
 	'use strict'
 	var React = __webpack_require__(3);
 	module.exports = React.createClass({displayName: "module.exports",
-	      onComponentDidMount:function(){
-	        
+	      getInitialState:function(){
+	        return {user:null};
+	      },
+	      componentDidMount:function(){
+	        this.loadLoggedInUser();
+	      },
+	      loadLoggedInUser:function(){
+	        var userApiUrl = "/api/user";
+	       $.ajax({
+	        type: "GET",
+	        url: userApiUrl,
+	        contentType: "application/json",
+	        success: function(data){
+	           console.log("user successfully retrieved", data);
+	           this.setState({user:data});
+	        }.bind(this),
+	        error: function(data){
+	          //user not logged in
+	           console.log("error receiving user", data);
+	            this.setState({user:null})
+	                }.bind(this),
+	        dataType: 'json'
+	      });
 	      },
 			  render:function(){
 			    return(
@@ -110,7 +131,7 @@
 	 
 	      ), 
 	      React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
-	        React.createElement("li", null, React.createElement("a", {href: "/login"}, "Login"))
+	      React.createElement("li", null, this.state.user?React.createElement("a", {href: "/logout"}, "Logout"):React.createElement("a", {href: "/login"}, "Login"))
 	      )
 	    )
 	  )
@@ -137,145 +158,7 @@
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(3)
-	var PollVote = __webpack_require__(9)
-	var VoteResults = __webpack_require__(10)
-	module.exports =  React.createClass({displayName: "module.exports",
-	    loadPoll:function(){
-	     var pollId = this.props.id;
-	     
-	      var pollApiUrl = "/openapi/getPoll";
-	        console.log("loading poll " + pollId);
-	         $.ajax({
-	          type: "GET",
-	          url: pollApiUrl,
-	          data: {id:pollId},
-	          contentType: "application/json",
-	          success: function(data){
-	             console.log("data successfully retrieved", data);
-	             this.setState({
-	                 poll:data
-	              });
-	             
-	                  }.bind(this),
-	          error: function(data){
-	             console.log("error receiving data", data);
-	                  }.bind(this),
-	          dataType: 'json'
-	        });
-	    },
-	    componentDidMount:function(){
-	      this.loadPoll();
-	    },
-	    handlePollSubmit:function(optionSelected){
-	        var voteApiUrl = "/api/vote";
-	        console.log("poll submitted",optionSelected);
-	        $.ajax({
-	          type: "POST",
-	          url: voteApiUrl,
-	          data: JSON.stringify(optionSelected),
-	          contentType: "application/json",
-	          success: function(data){
-	              console.log("Vote submitted", data);
-	              this.setState({showPage:'voteResults'})
-	                  }.bind(this),
-	          error: function(data){
-	             console.log("Error submitting vote", data);
-	                  }.bind(this),
-	          dataType: 'json'
-	        });
-	    },
-	    
-	      getInitialState: function() {
-	          return { 
-	              poll:{
-	                  name:'',
-	                  options:[{name:''}]
-	              },
-	              showPage:'pollVote'
-	          };
-	      },
-	      render:function(){
-	        return(
-	          React.createElement("div", null, 
-	            React.createElement("div", {className: "row"}, 
-	            React.createElement("div", {className: "col-md-4"}), 
-	            React.createElement("div", {className: "col-md-4"}, 
-	            this.state.showPage==="pollVote" ? 
-	              React.createElement(PollVote, {poll: this.state.poll, onSubmit: this.handlePollSubmit}):
-	              React.createElement(VoteResults, {poll: this.state.poll})
-	            
-	            ), 
-	            React.createElement("div", {className: "col-md-4"})
-	            )
-	          )
-	      
-	      );
-	  }
-	  
-	});
-	 
-	  
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(3)
-	module.exports = React.createClass({displayName: "module.exports",
-	    handleSubmit:function(e){
-	        e.preventDefault();
-	        //find option
-	        var option = $.grep(this.props.poll.options, function(e){ return e._id === this.state.selectedOptionId; }.bind(this));
-	        console.log("submitting this option", option[0]);
-	       this.props.onSubmit(option[0]);
-	    },
-	    handleOnChange:function(e){
-	      this.setState({selectedOptionId:e.target.value});
-	      this.setState({disableSubmit:""});
-	    },
-	    getInitialState:function(){
-	        return {disableSubmit:"disabled"};
-	    },
-	    createOption:function(option, index){
-	        console.log('creating this option', option);
-	        return(
-	            React.createElement("div", {key: index, className: "radio"}, 
-	              React.createElement("label", null, 
-	                React.createElement("input", {type: "radio", name: "optionsRadios", id: "optionsRadios1", value: option._id, onChange: this.handleOnChange}), 
-	                option.name
-	              )
-	            )
-	            
-	            );
-	    },
-	    render:function(){
-	      return(
-	React.createElement("div", null, 
-	      
-	    React.createElement("h1", null, this.props.poll.name), 
-	    React.createElement("form", {onSubmit: this.handleSubmit}, 
-	    React.createElement("div", {className: "text-left"}, 
-	       this.props.poll.options.map(this.createOption)
-	    ), 
-	        React.createElement("button", {type: "submit", className: "btn btn-primary btn-block", disabled: this.state.disableSubmit}, "Vote"), 
-	    
-	        React.createElement("div", null, "Sorry no comments yet")
-	    )
-	)
-	        );
-	    }
-	  });
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(3)
-	var Chart = __webpack_require__(11)
+	var Chart = __webpack_require__(9)
 	module.exports = React.createClass({displayName: "module.exports",
 	    getInitialState:function(){
 
@@ -316,7 +199,7 @@
 	  });
 
 /***/ },
-/* 11 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -623,7 +506,7 @@
 				//Method for warning of errors
 				if (window.console && typeof window.console.warn == "function") console.warn(str);
 			},
-			amd = helpers.amd = ("function" == 'function' && __webpack_require__(12)),
+			amd = helpers.amd = ("function" == 'function' && __webpack_require__(10)),
 			//-- Math methods
 			isNumber = helpers.isNumber = function(n){
 				return !isNaN(parseFloat(n)) && isFinite(n);
@@ -3798,12 +3681,151 @@
 	}).call(this);
 
 /***/ },
-/* 12 */
+/* 10 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
 
 	/* WEBPACK VAR INJECTION */}.call(exports, {}))
+
+/***/ },
+/* 11 */,
+/* 12 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(3)
+	var PollVote = __webpack_require__(13)
+	var VoteResults = __webpack_require__(8)
+	module.exports =  React.createClass({displayName: "module.exports",
+	    loadPoll:function(){
+	     var pollId = this.props.id;
+	     
+	      var pollApiUrl = "/openapi/getPoll";
+	        console.log("loading poll " + pollId);
+	         $.ajax({
+	          type: "GET",
+	          url: pollApiUrl,
+	          data: {id:pollId},
+	          contentType: "application/json",
+	          success: function(data){
+	             console.log("data successfully retrieved", data);
+	             this.setState({
+	                 poll:data
+	              });
+	             
+	                  }.bind(this),
+	          error: function(data){
+	             console.log("error receiving data", data);
+	                  }.bind(this),
+	          dataType: 'json'
+	        });
+	    },
+	    componentDidMount:function(){
+	      this.loadPoll();
+	    },
+	    handlePollSubmit:function(optionSelected){
+	        var voteApiUrl = "/api/vote";
+	        console.log("poll submitted",optionSelected);
+	        $.ajax({
+	          type: "POST",
+	          url: voteApiUrl,
+	          data: JSON.stringify(optionSelected),
+	          contentType: "application/json",
+	          success: function(data){
+	              console.log("Vote submitted", data);
+	              this.setState({showPage:'voteResults'})
+	                  }.bind(this),
+	          error: function(data){
+	             console.log("Error submitting vote", data);
+	                  }.bind(this),
+	          dataType: 'json'
+	        });
+	    },
+	    
+	      getInitialState: function() {
+	          return { 
+	              poll:{
+	                  name:'',
+	                  options:[{name:''}]
+	              },
+	              showPage:'pollVote'
+	          };
+	      },
+	      render:function(){
+	        return(
+	          React.createElement("div", null, 
+	            React.createElement("div", {className: "row"}, 
+	            React.createElement("div", {className: "col-md-4"}), 
+	            React.createElement("div", {className: "col-md-4"}, 
+	            this.state.showPage==="pollVote" ? 
+	              React.createElement(PollVote, {poll: this.state.poll, onSubmit: this.handlePollSubmit}):
+	              React.createElement(VoteResults, {poll: this.state.poll})
+	            
+	            ), 
+	            React.createElement("div", {className: "col-md-4"})
+	            )
+	          )
+	      
+	      );
+	  }
+	  
+	});
+	 
+	  
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(3)
+	module.exports = React.createClass({displayName: "module.exports",
+	    handleSubmit:function(e){
+	        e.preventDefault();
+	        //find option
+	        var option = $.grep(this.props.poll.options, function(e){ return e._id === this.state.selectedOptionId; }.bind(this));
+	        console.log("submitting this option", option[0]);
+	       this.props.onSubmit(option[0]);
+	    },
+	    handleOnChange:function(e){
+	      this.setState({selectedOptionId:e.target.value});
+	      this.setState({disableSubmit:""});
+	    },
+	    getInitialState:function(){
+	        return {disableSubmit:"disabled"};
+	    },
+	    createOption:function(option, index){
+	        console.log('creating this option', option);
+	        return(
+	            React.createElement("div", {key: index, className: "radio"}, 
+	              React.createElement("label", null, 
+	                React.createElement("input", {type: "radio", name: "optionsRadios", id: "optionsRadios1", value: option._id, onChange: this.handleOnChange}), 
+	                option.name
+	              )
+	            )
+	            
+	            );
+	    },
+	    render:function(){
+	      return(
+	React.createElement("div", null, 
+	      
+	    React.createElement("h1", null, this.props.poll.name), 
+	    React.createElement("form", {onSubmit: this.handleSubmit}, 
+	    React.createElement("div", {className: "text-left"}, 
+	       this.props.poll.options.map(this.createOption)
+	    ), 
+	        React.createElement("button", {type: "submit", className: "btn btn-primary btn-block", disabled: this.state.disableSubmit}, "Vote"), 
+	    
+	        React.createElement("div", null, "Sorry no comments yet")
+	    )
+	)
+	        );
+	    }
+	  });
 
 /***/ }
 /******/ ]);

@@ -58,6 +58,7 @@ module.exports = function (app, passport) {
 		.get(isLoggedIn, function (req, res) {
 			res.json(req.user.github);
 		});
+		
 
 	app.route('/auth/github')
 		.get(passport.authenticate('github'));

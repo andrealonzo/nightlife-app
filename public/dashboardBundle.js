@@ -72,8 +72,29 @@
 	'use strict'
 	var React = __webpack_require__(3);
 	module.exports = React.createClass({displayName: "module.exports",
-	      onComponentDidMount:function(){
-	        
+	      getInitialState:function(){
+	        return {user:null};
+	      },
+	      componentDidMount:function(){
+	        this.loadLoggedInUser();
+	      },
+	      loadLoggedInUser:function(){
+	        var userApiUrl = "/api/user";
+	       $.ajax({
+	        type: "GET",
+	        url: userApiUrl,
+	        contentType: "application/json",
+	        success: function(data){
+	           console.log("user successfully retrieved", data);
+	           this.setState({user:data});
+	        }.bind(this),
+	        error: function(data){
+	          //user not logged in
+	           console.log("error receiving user", data);
+	            this.setState({user:null})
+	                }.bind(this),
+	        dataType: 'json'
+	      });
 	      },
 			  render:function(){
 			    return(
@@ -95,7 +116,7 @@
 	 
 	      ), 
 	      React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
-	        React.createElement("li", null, React.createElement("a", {href: "/login"}, "Login"))
+	      React.createElement("li", null, this.state.user?React.createElement("a", {href: "/logout"}, "Logout"):React.createElement("a", {href: "/login"}, "Login"))
 	      )
 	    )
 	  )
@@ -121,7 +142,7 @@
 	var NewPoll = __webpack_require__(5);
 	var MyPolls = __webpack_require__(6);
 	var PollAddSuccess = __webpack_require__(7);
-	var VoteResults = __webpack_require__(10);
+	var VoteResults = __webpack_require__(8);
 	module.exports =  React.createClass({displayName: "module.exports",
 	  getMyPage:function(){
 	    console.log("in here");
@@ -400,15 +421,13 @@
 
 
 /***/ },
-/* 8 */,
-/* 9 */,
-/* 10 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(3)
-	var Chart = __webpack_require__(11)
+	var Chart = __webpack_require__(9)
 	module.exports = React.createClass({displayName: "module.exports",
 	    getInitialState:function(){
 
@@ -449,7 +468,7 @@
 	  });
 
 /***/ },
-/* 11 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -756,7 +775,7 @@
 				//Method for warning of errors
 				if (window.console && typeof window.console.warn == "function") console.warn(str);
 			},
-			amd = helpers.amd = ("function" == 'function' && __webpack_require__(12)),
+			amd = helpers.amd = ("function" == 'function' && __webpack_require__(10)),
 			//-- Math methods
 			isNumber = helpers.isNumber = function(n){
 				return !isNaN(parseFloat(n)) && isFinite(n);
@@ -3931,7 +3950,7 @@
 	}).call(this);
 
 /***/ },
-/* 12 */
+/* 10 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;

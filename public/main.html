@@ -6,52 +6,22 @@
 		<title>Poll Plex</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-		
+		 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="public/js/ajax-functions.js"></script>
 	</head>
 
 	<body>
-	    <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Poll Plex</a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
- 
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="/login">Signup</a></li>
-        <li><a href="/login">Login</a></li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
-		<div class="container-fluid text-center">
-		    <div class="jumbotron">
-              <h1>Poll Plex</h1>
-              <p>Create custom polls with live results.</p>
-              <p><a class="btn btn-primary btn-lg" href="/login" role="button">Sign Up</a></p>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <h1>Live Results</h1>Live graphs show your poll results immediately in an easy to understand format. One graph will not provide the whole picture, that's why we provide multiple graph types to better describe your results.</div>
-                <div class="col-md-4"><h1>Works Everywhere</h1>Traditional desktop computers now represent only 30% of Internet traffic. Your poll must work on the tablets, smart phones, netbooks and notebooks that your visitors are using. Our responsive designs do just that.</div>
-                <div class="col-md-4"><h1>Social Integration</h1>Free integrated facebook or traditional comments allow your poll voters to provide immediate feedback and discuss results. Social share buttons encourage your poll voters to help spread the word.</div>
-            </div>
-			
-		</div>
+	  
+  <div id = "nav-container">
+	   
+  </div>
+  <div id="main"></div>
+		
 	</body>
 
+		<script type="text/javascript" src="/public/mainBundle.js" charset="utf-8"></script>
      <script src="/public/js/bootstrap.min.js"></script>
 </html>
