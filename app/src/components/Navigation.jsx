@@ -25,7 +25,6 @@ module.exports = React.createClass({
  
       </ul>
       <ul className="nav navbar-nav navbar-right">
-        <li><a href="/logout">logout</a></li>
         <li><a href="/login">Login</a></li>
       </ul>
     </div>

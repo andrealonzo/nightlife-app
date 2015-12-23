@@ -91,7 +91,6 @@
 	 
 	      ), 
 	      React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
-	        React.createElement("li", null, React.createElement("a", {href: "/logout"}, "logout")), 
 	        React.createElement("li", null, React.createElement("a", {href: "/login"}, "Login"))
 	      )
 	    )
