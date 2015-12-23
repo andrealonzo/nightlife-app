@@ -68,6 +68,9 @@
 	'use strict'
 	var React = __webpack_require__(3);
 	module.exports = React.createClass({displayName: "module.exports",
+	      onComponentDidMount:function(){
+	        
+	      },
 			  render:function(){
 			    return(
 			        React.createElement("nav", {className: "navbar navbar-default"}, 
@@ -88,7 +91,7 @@
 	 
 	      ), 
 	      React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
-	        React.createElement("li", null, React.createElement("a", {href: "/login"}, "Signup")), 
+	        React.createElement("li", null, React.createElement("a", {href: "/logout"}, "logout")), 
 	        React.createElement("li", null, React.createElement("a", {href: "/login"}, "Login"))
 	      )
 	    )

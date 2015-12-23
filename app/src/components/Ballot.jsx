@@ -2,6 +2,7 @@
 'use strict'
 var React = require('react')
 var PollVote = require('./PollVote')
+var VoteResults = require('./VoteResults')
 module.exports =  React.createClass({
     loadPoll:function(){
      var pollId = this.props.id;
@@ -39,7 +40,7 @@ module.exports =  React.createClass({
           contentType: "application/json",
           success: function(data){
               console.log("Vote submitted", data);
-            
+              this.setState({showPage:'voteResults'})
                   }.bind(this),
           error: function(data){
              console.log("Error submitting vote", data);
@@ -53,7 +54,9 @@ module.exports =  React.createClass({
               poll:{
                   name:'',
                   options:[{name:''}]
-              } };
+              },
+              showPage:'pollVote'
+          };
       },
       render:function(){
         return(
@@ -61,7 +64,10 @@ module.exports =  React.createClass({
             <div className="row">
             <div className="col-md-4"></div>
             <div className="col-md-4">
-            <PollVote poll={this.state.poll} onSubmit={this.handlePollSubmit}/>
+            {this.state.showPage==="pollVote" ? 
+              <PollVote poll={this.state.poll} onSubmit={this.handlePollSubmit}/>:
+              <VoteResults poll={this.state.poll}/>
+            }
             </div>
             <div className="col-md-4"></div>
             </div>

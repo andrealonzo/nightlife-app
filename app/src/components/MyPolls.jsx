@@ -21,14 +21,24 @@ module.exports = React.createClass({
     createPoll:function(poll, index){
       return(
          <li key = {index} className="list-group-item text-right">
+         <div>
          <a href = {pollAppUrl + "/vote?id="+poll._id} target = "_blank">
           <div className="pull-left">{poll.name}</div>
         </a>
+        
+          <button type="button" onClick = {this.handleResultButtonClick.bind(this,poll)} className="btn btn-success">
+     results 
+          </button>
           <button type="button" onClick = {this.handleDeletePollClick.bind(this,poll)} className="btn btn-danger">
      delete 
           </button>
+          </div>
+          
           </li>
          );
+    },
+    handleResultButtonClick:function(poll){
+      this.props.onShowResults(poll);
     },
     handleDeletePollClick:function(poll){
       var pollApiUrl = "/api/15024773/polls";

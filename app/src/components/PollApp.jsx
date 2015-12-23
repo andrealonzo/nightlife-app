@@ -4,6 +4,7 @@ var React = require("react");
 var NewPoll = require("./NewPoll");
 var MyPolls = require("./MyPolls");
 var PollAddSuccess = require("./PollAddSuccess");
+var VoteResults = require("./VoteResults");
 module.exports =  React.createClass({
   getMyPage:function(){
     console.log("in here");
@@ -20,6 +21,29 @@ module.exports =  React.createClass({
   handleAddNewPoll:function(poll){
     this.setState({pollId:poll._id, showPage:"addedNewPoll"});
     console.log("newPollAdded", poll);
+  },
+  handlePollResults:function(poll){
+    this.loadPoll(poll._id);
+  },
+  loadPoll:function(pollId){
+    var pollApiUrl = "/openapi/getPoll";
+      console.log("loading poll " + pollId);
+       $.ajax({
+        type: "GET",
+        url: pollApiUrl,
+        data: {id:pollId},
+        contentType: "application/json",
+        success: function(data){
+           console.log("data successfully retrieved", data);
+           this.setState({
+               poll:data,
+             showPage: "pollResults" });
+                }.bind(this),
+        error: function(data){
+           console.log("error receiving data", data);
+                }.bind(this),
+        dataType: 'json'
+      });
   },
   render:function(){
     return(
@@ -40,7 +64,8 @@ module.exports =  React.createClass({
         
         { 
           this.state.showPage === "newPoll" ? <NewPoll onAddNewPoll={this.handleAddNewPoll}/>  : 
-          this.state.showPage === "myPolls" ? <MyPolls/> : 
+          this.state.showPage === "myPolls" ? <MyPolls onShowResults = {this.handlePollResults}/> : 
+          this.state.showPage === "pollResults" ? <VoteResults poll = {this.state.poll}/> : 
           <PollAddSuccess pollId = {this.state.pollId}/>}
         </div>
         <div className="col-md-4"></div>

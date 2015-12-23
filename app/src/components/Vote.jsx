@@ -4,12 +4,12 @@ var ReactDOM = require('react-dom')
 var Navigation = require('./Navigation')
 var Ballot = require('./Ballot')
 var pollId = getUrlVars().id;
- ReactDOM.render(
+ReactDOM.render(
         <Navigation/>,
         document.getElementById('nav-container')
         );
 ReactDOM.render(
-      <Ballot id= {pollId}/>,
+      <Ballot id= {pollId} onSubmit={this.handleBallotSubmit}/>,
       document.getElementById('ballot')
       );
       

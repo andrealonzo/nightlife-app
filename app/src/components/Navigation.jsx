@@ -2,6 +2,9 @@
 'use strict'
 var React = require("react");
 module.exports = React.createClass({
+      onComponentDidMount:function(){
+        
+      },
 		  render:function(){
 		    return(
 		        <nav className="navbar navbar-default">
@@ -22,7 +25,7 @@ module.exports = React.createClass({
  
       </ul>
       <ul className="nav navbar-nav navbar-right">
-        <li><a href="/login">Signup</a></li>
+        <li><a href="/logout">logout</a></li>
         <li><a href="/login">Login</a></li>
       </ul>
     </div>
