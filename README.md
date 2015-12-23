@@ -62,7 +62,8 @@ Next, open your browser and enter `http://localhost:8080/`. Congrats, you're up 
 | React  
 | Node.js         
 | Passport         
-| Mongoose        
+| Mongoose         
+| Webpack             
 
 ## License
 
