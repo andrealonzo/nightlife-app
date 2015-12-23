@@ -10,7 +10,7 @@ module.exports = React.createClass({
     var pollUrl = pollAppUrl + "/vote?id="+this.props.pollId;
     return(
       <div>
-      <h1>Congratulations!  Your poll has been created.  Access your poll below</h1>
+      <h1>Congratulations!</h1>  <h3>Your poll has been posted to</h3>
       <a target= "_blank" href={pollUrl}>
       {pollUrl}
       </a>

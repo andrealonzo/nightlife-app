@@ -23,27 +23,8 @@ module.exports =  React.createClass({
     console.log("newPollAdded", poll);
   },
   handlePollResults:function(poll){
-    this.loadPoll(poll._id);
-  },
-  loadPoll:function(pollId){
-    var pollApiUrl = "/openapi/getPoll";
-      console.log("loading poll " + pollId);
-       $.ajax({
-        type: "GET",
-        url: pollApiUrl,
-        data: {id:pollId},
-        contentType: "application/json",
-        success: function(data){
-           console.log("data successfully retrieved", data);
-           this.setState({
-               poll:data,
-             showPage: "pollResults" });
-                }.bind(this),
-        error: function(data){
-           console.log("error receiving data", data);
-                }.bind(this),
-        dataType: 'json'
-      });
+   this.setState({poll:poll,showPage: "pollResults" });
+               
   },
   render:function(){
     return(
