@@ -2,146 +2,28 @@
 
 <html>
 
-    <head>
-        <title>Clementine.js - The elegant and lightweight full stack JavaScript boilerplate.</title>
+	<head >
+		<title>Urbane Dives</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		 <link rel="stylesheet" href="/public/css/main.css">
+		 
+		 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="public/js/ajax-functions.js"></script>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,700' rel='stylesheet' type='text/css'>	</head>
 
-        <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet" type="text/css">
-        <link href="/public/css/main.css" rel="stylesheet" type="text/css">
-        
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.0/react-dom.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.15/browser.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <script type="text/javascript" src="public/js/ajax-functions.js"></script>
-    </head>
+	<body class="appWrapper">
+	  
+  <div id = "nav-container">
+	   
+  </div>
+  <div id="main"></div>
+		
+	</body>
 
-    <header>
-   
-    </header>
-
-    <body >
-        <div id = "main"></div>
-        
-        <script type="text/babel">
-    
-    var profileUrl=window.location.origin + "/api/profile";
-    
-    var MainBox = React.createClass({
-        loadUser: function(){
-             ajaxRequest (
-                   'GET', 
-                   profileUrl,
-                  function(data){
-                     this.setState({user:data});
-                   }.bind(this)
-                   );
-                
-           },
-        getInitialState:function(){
-             return {user: 0};  
-           },
-           componentDidMount: function(){
-                this.loadUser();
-           },
-        render:function(){
-            return(
-            <div>
-            <div className="container">
-            <header>
-                <WelcomeBox user = {this.state.user}/>
-                </header>
-                <img src="/public/img/clementine_150.png" />
-                <br />
-                <p className="clementine-text">Clementine.js</p>
-                <AppBox user={this.state.user}/>
-            </div>
-            </div>
-            );
-        } 
-    });
-    var AppBox = React.createClass({
-            
-           handleClick:function(event){
-               ajaxRequest (
-                   'POST', 
-                    window.location.origin + '/api/'+this.props.user.id+'/clicks'
-                   , function(data){
-                       this.loadClicksFromServer();
-                   }.bind(this)
-                   )
-           },handleResetClick:function(event){
-               ajaxRequest (
-                   'DELETE', 
-                    window.location.origin + '/api/'+this.props.user.id+'/clicks'
-                   , function(data){
-                       this.loadClicksFromServer();
-                   }.bind(this)
-                   )
-           },
-            loadClicksFromServer: function(){
-               ajaxRequest (
-                   'GET', 
-                    window.location.origin + '/api/'+this.props.user.id+'/clicks'
-                   , function(data){
-                     this.setState({clicks:data.clicks});
-                   }.bind(this)
-                   )
-           },
-            
-           getInitialState:function(){
-             return {clicks: 0};  
-           },
-           
-            componentDidMount: function(){
-                this.loadClicksFromServer();
-           },
-            render: function(){
-                return (
-                    <div>
-                    <div id="button-number"></div>
-                    
-                     <p>You have clicked the button <span id="click-nbr">{this.state.clicks}</span> times.</p>
-                    <br />
-                    <div id = "btn-container" className="btn-container">
-                    </div>
-                    <div  className="btn-container">
-                    
-                        <button type="submit" onClick={this.handleClick} className="btn btn-add">CLICK ME!</button>
-                        <button onClick={this.handleResetClick} className="btn btn-add" className="btn btn-delete">RESET</button>
-                        </div>
-                        </div>
-                    );
-            }
-        });
-        
-        var WelcomeBox = React.createClass({
-            render: function(){
-                return (
-                    <div>
-                    <p>Welcome, <span id="display-name">{this.props.user.displayName}</span>!</p>
-                   <a className="menu" href="/profile">Profile</a>
-                    <p>|</p>
-                    <a className="menu" href="/logout">Logout</a>
-                   </div>
-                    );
-            }
-        });
-    
-  
-       
-       
-     ReactDOM.render(
-       <MainBox/>,
-       document.getElementById('main')
-       );
-       
-            
-            
-        </script>
-
-
-
-        
-    </body>
-
+		<script type="text/javascript" src="/public/indexBundle.js" charset="utf-8"></script>
+     <script src="/public/js/bootstrap.min.js"></script>
 </html>

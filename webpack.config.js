@@ -1,9 +1,6 @@
 module.exports = {
     entry: {
-        login:"./app/src/components/Login.jsx",
-        dashboard:"./app/src/components/Dashboard.jsx",
-        vote:"./app/src/components/Vote.jsx",
-        main:"./app/src/components/Main.jsx"
+        index:"./app/src/components/Index.jsx"
     },
     output: {
         path: __dirname,

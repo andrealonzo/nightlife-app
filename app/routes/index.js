@@ -21,8 +21,8 @@ module.exports = function (app, passport) {
 	
 
 	app.route('/')
-		.get(isLoggedIn, function (req, res) {
-			res.sendFile(path + '/public/dashboard.html');
+		.get(function (req, res) {
+			res.sendFile(path + '/public/index.html');
 		});
 		
 		
