@@ -147,39 +147,64 @@
 	'use strict'
 	var React = __webpack_require__(3);
 	var Yelp = __webpack_require__(6);
+	var Business = __webpack_require__(69)
 	     
 	module.exports =  React.createClass({displayName: "module.exports",
-	    getInitialState: function() {
+	    loadInitialLocation:function(){
+	        $.get("https://freegeoip.net/json/", function(response) {
+	            this.setState({location:response});
+	        }.bind(this), "json");
+	    },
+	  getInitialState: function() {
 	    return {
-	      businessName: ''
+	      businesses: [],
+	      location: {
+	          city: 'your city'
+	      }
 	    };
 	  },
-	 generateNonce: function(length) {
-	    var text = "";
-	    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	    for(var i = 0; i < length; i++) {
-	        text += possible.charAt(Math.floor(Math.random() * possible.length));
-	    }
-	    return text;
-	},
 	  componentDidMount: function() {
-	    
+	    var apiUrl = "/openapi/yelp";
+	    $.get(apiUrl, function(result) {
+	        //replace with large image url
+	        result.businesses.map(function(business, index){
+	            var imgUrl = business.image_url;
+	            var newImgUrl = imgUrl.replace("ms.jpg", "o.jpg");
+	            result.businesses[index].image_url = newImgUrl;
+	        });
+	        this.setState({businesses: result.businesses});
+	    }.bind(this));
+	    //get initial location
+	    this.loadInitialLocation();
 	  },
 	  
+	  renderBusiness: function(business, index) {
+	    return(
+	        React.createElement("div", {key: index, className: "row text-left"}, 
+	                React.createElement("div", {className: "col-md-1"}
+	                ), 
+	                React.createElement("div", {className: "col-md-10"}, 
+	                    React.createElement(Business, {business: business})
+	                 ), 
+	                React.createElement("div", {className: "col-md-1"}
+	                )
+	            )
+	        );
+	  },
 	    render:function(){
 	        return(
 	            React.createElement("div", null, 
 			    React.createElement("div", {className: "jumbotron searchBox text-center"}, 
 			    React.createElement("div", {className: "container "}, 
 			    React.createElement("div", {className: "headline"}, 
-	              React.createElement("h2", null, "Find the best night clubs and bars in San Diego")
+	              React.createElement("h2", null, "Find the best night clubs and bars in ", this.state.location.city)
 	              
 	              ), 
 	                      React.createElement("div", {className: "row"}, 
 	                      
 	           React.createElement("div", {className: "col-lg-3 search-cols"}, 
 	           
-	              React.createElement("input", {type: "text", className: "form-control input-lg", id: "search-church", placeholder: "Near Locale"})
+	              React.createElement("input", {type: "text", className: "form-control input-lg", id: "search-church", placeholder: "Near " + this.state.location.city})
 	              ), 
 	           React.createElement("div", {className: "col-lg-8 search-cols"}, 
 	           
@@ -195,61 +220,7 @@
 	            ), 
 	            
 	            React.createElement("div", {className: "container"}, 
-	            React.createElement("div", {className: "row text-left"}, 
-	                React.createElement("div", {className: "col-md-2"}
-	                ), 
-	                React.createElement("div", {className: "col-md-8"}, 
-	                React.createElement("div", {className: "panel panel-default"}, 
-	                      React.createElement("div", {className: "panel-body business-body"}, 
-	                    
-	                    React.createElement("div", {className: "row"}, 
-	                    
-	                        React.createElement("div", {className: "col-md-7"}, 
-	                        
-	                        React.createElement("h2", {className: "business-name"}, "Pitchers"
-	                        ), 
-	                        
-	                        
-	                            React.createElement("div", null, "9926 Carmel Mountain Rd"), 
-	                            React.createElement("div", null, "San Diego, CA 92129"), 
-	                            React.createElement("div", null, React.createElement("p", null, "(858) 484-3777"))
-	                           
-	                        ), 
-	                        React.createElement("div", {className: "col-md-5"}, 
-	                        React.createElement("h4", null, 
-	                        
-	                        React.createElement("p", {className: "lead"}, 
-	                            "20 clubbers going"
-	                            )
-	                          ), 
-	                        React.createElement("select", {className: "form-control"}, 
-	                          React.createElement("option", {defaultValue: true, value: "Not Going"}, "Not Going"), 
-	                          React.createElement("option", {value: "Going"}, "Going")
-	                        )
-	                        
-	                        )
-	                    ), 
-	                    React.createElement("p", null, 
-	                    React.createElement("img", {src: "http://s3-media2.fl.yelpcdn.com/bphoto/sXG06Ss46cwO_lu1NvnBhw/o.jpg", className: "img-responsive img-rounded"})
-	                    ), 
-	                    React.createElement("div", {className: "row review-row"}, 
-	                        React.createElement("div", {className: "col-xs-1"}, 
-	                        React.createElement("img", {className: "img-rounded ", src: "//s3-media4.fl.yelpcdn.com/photo/bdQAQk7m_JhjKQ0mpWI0bw/30s.jpg"})
-	                        ), 
-	                        React.createElement("div", {className: "col-xs-11 "}, 
-	                        "\"I love this place. If you are looking for a chill, local sports bar that borders on dive, this is your place. Located in a strip mall, there is plentiful...\""
-	                        )
-	                    
-	                    )
-	                    )
-	                    
-	                    )
-	                
-	                 ), 
-	                React.createElement("div", {className: "col-md-2"}
-	                )
-	            )
-				
+	            this.state.businesses.map(this.renderBusiness)
 			)
 			)
 	            );
@@ -10334,6 +10305,72 @@
 	}
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13).Buffer))
+
+/***/ },
+/* 69 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(3);
+
+	     
+	module.exports =  React.createClass({displayName: "module.exports",
+	    renderAddress:function(addressPortion, index){
+	        return(
+	            React.createElement("div", {key: index}, addressPortion)
+	            );
+	    },
+	    render:function(){
+	        return(
+	        React.createElement("div", {className: "panel panel-default animated fadeIn"}, 
+	              React.createElement("div", {className: "panel-body business-body"}, 
+	            
+	            React.createElement("div", {className: "row"}, 
+	            
+	                React.createElement("div", {className: "col-md-7"}, 
+	                
+	                React.createElement("h2", {className: "business-name"}, this.props.business.name
+	                ), 
+	                
+	                    this.props.business.location.display_address.map(this.renderAddress), 
+	     
+	                    React.createElement("div", null, React.createElement("p", null, this.props.business.display_phone))
+	                   
+	                ), 
+	                React.createElement("div", {className: "col-md-5"}, 
+	                React.createElement("h4", null, 
+	                
+	                React.createElement("p", {className: "lead"}, 
+	                    "20 people going"
+	                    )
+	                  ), 
+	                React.createElement("select", {className: "form-control"}, 
+	                  React.createElement("option", {defaultValue: true, value: "Not Going"}, "Not Going"), 
+	                  React.createElement("option", {value: "Going"}, "Going")
+	                )
+	                
+	                )
+	            ), 
+	            React.createElement("p", null, 
+	            React.createElement("img", {src: this.props.business.image_url, className: "img-responsive img-rounded"})
+	            ), 
+	            React.createElement("div", {className: "row review-row"}, 
+	                React.createElement("div", {className: "col-xs-2"}, 
+	                React.createElement("img", {className: "img-rounded ", src: this.props.business.snippet_image_url})
+	                ), 
+	                React.createElement("div", {className: "col-xs-10"}, 
+	                this.props.business.snippet_text
+	                )
+	            
+	            )
+	            )
+	            
+	            )
+	                
+	            );
+	    }
+	});
 
 /***/ }
 /******/ ]);
