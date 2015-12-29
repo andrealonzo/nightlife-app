@@ -2,7 +2,7 @@
 
 var path = process.cwd();
 var PollHandler = require(path + '/app/controllers/pollHandler.server.js');
-var VoteHandler = require(path + '/app/controllers/voteHandler.server.js');
+var YelpHandler = require(path + '/app/controllers/yelpHandler.server.js');
 var ClickHandler = require(path + '/app/controllers/clickHandler.server.js');
 
 module.exports = function (app, passport) {
@@ -17,7 +17,7 @@ module.exports = function (app, passport) {
 
 	var pollHandler = new PollHandler();
 	var clickHandler = new ClickHandler();
-	var voteHandler = new VoteHandler();
+	var yelpHandler = new YelpHandler();
 	
 
 	app.route('/')
@@ -84,8 +84,8 @@ module.exports = function (app, passport) {
 	app.route('/openapi/getPoll')
 		.get(pollHandler.getPolls);
 		
-	app.route('/api/vote')
-		.post(voteHandler.addVote);
+	app.route('/openapi/yelp')
+		.get(yelpHandler.getResults);
 		
 	app.route('/vote')
 		.get(function (req, res) {

@@ -30,10 +30,12 @@
     "express": "^4.12.4",
     "express-session": "^1.11.3",
     "mongoose": "^4.1.0",
+    "node-yelp": "0.0.3",
     "passport": "^0.3.0",
     "passport-github": "^1.0.0",
     "react": "^0.14.3",
-    "react-dom": "^0.14.3"
+    "react-dom": "^0.14.3",
+    "yelp": "^1.0.1"
   },
   "devDependencies": {
     "jsx-loader": "^0.13.2",

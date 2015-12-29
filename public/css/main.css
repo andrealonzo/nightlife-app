@@ -7,18 +7,25 @@
     overflow: hidden;
 }
 
+
 .searchBox {
     color:white;
 }
 
+.search-cols{
+    padding: 0px;
+}
+.business-name{
+    color:#cb202d;
+    font-weight:700;
+}
+
+.business-body{
+    padding-top:0px;
+}
+
+
 .appWrapper {
 	font-family: 'Roboto', sans-serif;
 
-}
-
-.business .business-name{
-     font-weight: 700;
-}
-.business .business-address{
-     color:rgb(119, 119, 119);
 }
