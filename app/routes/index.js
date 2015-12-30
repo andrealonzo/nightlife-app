@@ -3,7 +3,6 @@
 var path = process.cwd();
 var PollHandler = require(path + '/app/controllers/pollHandler.server.js');
 var YelpHandler = require(path + '/app/controllers/yelpHandler.server.js');
-var ClickHandler = require(path + '/app/controllers/clickHandler.server.js');
 
 module.exports = function (app, passport) {
 
@@ -16,7 +15,6 @@ module.exports = function (app, passport) {
 	}
 
 	var pollHandler = new PollHandler();
-	var clickHandler = new ClickHandler();
 	var yelpHandler = new YelpHandler();
 	
 
@@ -68,13 +66,6 @@ module.exports = function (app, passport) {
 			successRedirect: '/dashboard',
 			failureRedirect: '/login'
 		}));
-
-	app.route('/api/:id/clicks')
-		.get(isLoggedIn, clickHandler.getClicks)
-		.post(isLoggedIn, clickHandler.addClick)
-		.delete(isLoggedIn, clickHandler.resetClicks);
-		
-		
 	
 	app.route('/api/:id/polls')
 		.get(isLoggedIn,pollHandler.getPolls)

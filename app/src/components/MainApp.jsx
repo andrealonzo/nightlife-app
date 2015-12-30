@@ -5,13 +5,42 @@ var Yelp = require('yelp');
 var Business = require('./Business')
      
 module.exports =  React.createClass({
-    loadInitialLocation:function(){
+    
+    handleSubmit:function(e){
+        e.preventDefault();
+      if(this.state.searchInput.trim() && this.state.locationInput.trim()){
+        this.search(this.state.searchInput, this.state.locationInput);
+      }
+    },
+    handleSearchChange:function(e){
+        this.setState({searchInput: e.target.value});
+    },
+    handleLocationChange:function(e){
+        this.setState({locationInput: e.target.value});
+    },
+    loadInitialLocation:function(callback){
         $.get("https://freegeoip.net/json/", function(response) {
             this.setState({location:response});
+            callback(response.zip_code);
         }.bind(this), "json");
+    },
+    search:function(searchTerm, location){
+            var apiUrl = "/openapi/yelp";
+            //get initial location
+          $.get(apiUrl, {search:searchTerm, location:location},function(result) {
+            //replace with large image url
+            result.businesses.map(function(business, index){
+                var imgUrl = business.image_url;
+                var newImgUrl = imgUrl.replace("ms.jpg", "o.jpg");
+                result.businesses[index].image_url = newImgUrl;
+            });
+            this.setState({businesses: result.businesses});
+        }.bind(this));
     },
   getInitialState: function() {
     return {
+      searchInput: '',
+      locationInput: '',
       businesses: [],
       location: {
           city: 'your city'
@@ -19,18 +48,9 @@ module.exports =  React.createClass({
     };
   },
   componentDidMount: function() {
-    var apiUrl = "/openapi/yelp";
-    $.get(apiUrl, function(result) {
-        //replace with large image url
-        result.businesses.map(function(business, index){
-            var imgUrl = business.image_url;
-            var newImgUrl = imgUrl.replace("ms.jpg", "o.jpg");
-            result.businesses[index].image_url = newImgUrl;
-        });
-        this.setState({businesses: result.businesses});
+    this.loadInitialLocation(function(location){
+        this.search("bars", location);
     }.bind(this));
-    //get initial location
-    this.loadInitialLocation();
   },
   
   renderBusiness: function(business, index) {
@@ -55,21 +75,23 @@ module.exports =  React.createClass({
               <h2 >Find the best night clubs and bars in {this.state.location.city}</h2>
               
               </div>
+              <form onSubmit={this.handleSubmit}>
                       <div className="row">
                       
            <div className="col-lg-3 search-cols">
            
-              <input type="text" className="form-control input-lg" id="search-church" placeholder={"Near " + this.state.location.city}></input>
+              <input type="text" className="form-control input-lg" id="search" onChange ={this.handleLocationChange} placeholder={"Near " + this.state.location.city}></input>
               </div>
            <div className="col-lg-8 search-cols">
            
      
-              <input type="text" className="form-control input-lg" id="search-church" placeholder="Find a bar or nightclub"></input>
+              <input type="text" className="form-control input-lg" id="search" onChange ={this.handleSearchChange} placeholder="Find a bar or nightclub"></input>
    
           </div>
           <div className="col-lg-1 search-cols"><button className="btn btn-danger btn-lg btn-block" type="submit">Search</button></div>
           
         </div>
+        </form>
         
             </div>
             </div>
