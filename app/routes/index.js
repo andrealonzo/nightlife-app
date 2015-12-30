@@ -10,7 +10,7 @@ module.exports = function (app, passport) {
 		if (req.isAuthenticated()) {
 			return next();
 		} else {
-			res.redirect('/main');
+			res.redirect('/');
 		}
 	}
 
@@ -23,19 +23,6 @@ module.exports = function (app, passport) {
 			res.sendFile(path + '/public/index.html');
 		});
 		
-		
-	app.route('/dashboard')
-		.get(isLoggedIn, function (req, res) {
-			res.sendFile(path + '/public/dashboard.html');
-		});
-		
-		
-
-	app.route('/main')
-		.get(function (req, res) {
-			res.sendFile(path + '/public/main.html');
-		});
-
 	app.route('/login')
 		.get(function (req, res) {
 			res.sendFile(path + '/public/login.html');
@@ -44,7 +31,7 @@ module.exports = function (app, passport) {
 	app.route('/logout')
 		.get(function (req, res) {
 			req.logout();
-			res.redirect('/login');
+			res.redirect('/');
 		});
 
 	app.route('/profile')
@@ -63,7 +50,7 @@ module.exports = function (app, passport) {
 
 	app.route('/auth/github/callback')
 		.get(passport.authenticate('github', {
-			successRedirect: '/dashboard',
+			successRedirect: '/',
 			failureRedirect: '/login'
 		}));
 
