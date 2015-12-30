@@ -9,7 +9,9 @@ module.exports =  React.createClass({
     handleSubmit:function(e){
         e.preventDefault();
       if(this.state.searchInput.trim() && this.state.locationInput.trim()){
-        this.search(this.state.searchInput, this.state.locationInput);
+        this.search({
+            search: this.state.searchInput, 
+            location: this.state.locationInput});
       }
     },
     handleSearchChange:function(e){
@@ -24,10 +26,11 @@ module.exports =  React.createClass({
             callback(response.zip_code);
         }.bind(this), "json");
     },
-    search:function(searchTerm, location){
+    search:function(searchData){
+            localStorage.setItem('search', JSON.stringify(searchData));
             var apiUrl = "/openapi/yelp";
             //get initial location
-          $.get(apiUrl, {search:searchTerm, location:location},function(result) {
+          $.get(apiUrl, searchData, function(result) {
             //replace with large image url
             result.businesses.map(function(business, index){
                 var imgUrl = business.image_url;
@@ -38,6 +41,7 @@ module.exports =  React.createClass({
         }.bind(this));
     },
   getInitialState: function() {
+      JSON.parse(localStorage.getItem('search'));
     return {
       searchInput: '',
       locationInput: '',
@@ -48,9 +52,16 @@ module.exports =  React.createClass({
     };
   },
   componentDidMount: function() {
-    this.loadInitialLocation(function(location){
-        this.search("bars", location);
-    }.bind(this));
+      var savedSearch = JSON.parse(localStorage.getItem('search'));
+      if(savedSearch){
+          this.search(savedSearch);
+      }else{
+        this.loadInitialLocation(function(location){
+            this.search({
+                search:"bars or clubs", 
+                location:location});
+        }.bind(this));
+      }
   },
   
   renderBusiness: function(business, index) {
@@ -72,7 +83,7 @@ module.exports =  React.createClass({
 		    <div className="jumbotron searchBox text-center">
 		    <div className="container ">
 		    <div className="headline">
-              <h2 >Find the best night clubs and bars in {this.state.location.city}</h2>
+              <h2 >Find the best night clubs and bars</h2>
               
               </div>
               <form onSubmit={this.handleSubmit}>

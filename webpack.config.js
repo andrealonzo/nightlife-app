@@ -1,6 +1,7 @@
 module.exports = {
     entry: {
-        index:"./app/src/components/Index.jsx"
+        index:"./app/src/components/Index.jsx",
+        login:"./app/src/components/Login.jsx"
     },
     output: {
         path: __dirname,

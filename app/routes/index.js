@@ -1,7 +1,6 @@
 'use strict';
 
 var path = process.cwd();
-var PollHandler = require(path + '/app/controllers/pollHandler.server.js');
 var YelpHandler = require(path + '/app/controllers/yelpHandler.server.js');
 
 module.exports = function (app, passport) {
@@ -10,30 +9,16 @@ module.exports = function (app, passport) {
 		if (req.isAuthenticated()) {
 			return next();
 		} else {
-			res.redirect('/main');
+			res.redirect('/');
 		}
 	}
 
-	var pollHandler = new PollHandler();
 	var yelpHandler = new YelpHandler();
 	
 
 	app.route('/')
 		.get(function (req, res) {
 			res.sendFile(path + '/public/index.html');
-		});
-		
-		
-	app.route('/dashboard')
-		.get(isLoggedIn, function (req, res) {
-			res.sendFile(path + '/public/dashboard.html');
-		});
-		
-		
-
-	app.route('/main')
-		.get(function (req, res) {
-			res.sendFile(path + '/public/main.html');
 		});
 
 	app.route('/login')
@@ -44,7 +29,7 @@ module.exports = function (app, passport) {
 	app.route('/logout')
 		.get(function (req, res) {
 			req.logout();
-			res.redirect('/login');
+			res.redirect('/');
 		});
 
 	app.route('/profile')
@@ -63,27 +48,12 @@ module.exports = function (app, passport) {
 
 	app.route('/auth/github/callback')
 		.get(passport.authenticate('github', {
-			successRedirect: '/dashboard',
+			successRedirect: '/',
 			failureRedirect: '/login'
 		}));
 	
-	app.route('/api/:id/polls')
-		.get(isLoggedIn,pollHandler.getPolls)
-		.post(isLoggedIn, pollHandler.addPoll)
-		.delete(isLoggedIn, pollHandler.deletePoll);
-		
-	app.route('/openapi/getPoll')
-		.get(pollHandler.getPolls);
-		
 	app.route('/openapi/yelp')
 		.get(yelpHandler.getResults);
 		
-	app.route('/vote')
-		.get(function (req, res) {
-			res.sendFile(path + '/public/vote.html');
-		});
-	app.route('/test')
-		.get(function (req, res) {
-			res.sendFile(path + '/public/test.html');
-		});
+
 };

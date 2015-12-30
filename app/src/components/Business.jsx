@@ -18,7 +18,11 @@ module.exports =  React.createClass({
             
                 <div className="col-md-7">
                 
-                <h2 className="business-name">{this.props.business.name}
+                <h2 className="business-name">
+                <a href = {this.props.business.url} target = "_blank">
+                {this.props.business.name}
+                
+                </a>
                 </h2>
                 
                     {this.props.business.location.display_address.map(this.renderAddress)}
@@ -30,7 +34,7 @@ module.exports =  React.createClass({
                 <h4>
                 
                 <p className="lead">
-                    20 people going
+                    0 people going
                     </p>
                   </h4>  
                 <select  className="form-control">
