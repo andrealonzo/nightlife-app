@@ -170,7 +170,22 @@
 	var Business = __webpack_require__(68)
 	     
 	module.exports =  React.createClass({displayName: "module.exports",
-	    
+	    loadLoggedInUser:function(){
+	        var userApiUrl = "/api/user";
+	       $.ajax({
+	        type: "GET",
+	        url: userApiUrl,
+	        contentType: "application/json",
+	        success: function(data){
+	           console.log("user successfully retrieved", data);
+	           this.setState({user:data});
+	        }.bind(this),
+	        error: function(data){
+	          //user not logged in
+	                }.bind(this),
+	        dataType: 'json'
+	      });
+	      },
 	    handleSubmit:function(e){
 	        e.preventDefault();
 	      if(this.state.searchInput.trim() && this.state.locationInput.trim()){
@@ -206,8 +221,10 @@
 	        }.bind(this));
 	    },
 	  getInitialState: function() {
-	      JSON.parse(localStorage.getItem('search'));
 	    return {
+	      user: {
+	          _id:null
+	      },
 	      searchInput: '',
 	      locationInput: '',
 	      businesses: [],
@@ -217,6 +234,7 @@
 	    };
 	  },
 	  componentDidMount: function() {
+	      this.loadLoggedInUser();
 	      var savedSearch = JSON.parse(localStorage.getItem('search'));
 	      if(savedSearch){
 	          this.search(savedSearch);
@@ -235,7 +253,7 @@
 	                React.createElement("div", {className: "col-md-1"}
 	                ), 
 	                React.createElement("div", {className: "col-md-10"}, 
-	                    React.createElement(Business, {business: business})
+	                    React.createElement(Business, {business: business, user: this.state.user})
 	                 ), 
 	                React.createElement("div", {className: "col-md-1"}
 	                )
@@ -10345,18 +10363,95 @@
 	'use strict'
 	var React = __webpack_require__(3);
 
-	     
 	module.exports =  React.createClass({displayName: "module.exports",
+	    
+	     
 	    handleReservationChange:function(e){
-	        console.log(e.target.value);
-	        
-	        console.log(this.props.business.id);
-	        
-	    },
+	        //check if user is logged in
+	        if(this.props.user._id){
+	            
+	        var reservationApiUrl = "/api/reservations";
+	        //if user is going to business
+	       if(e.target.value === "true"){
+	           
+	            console.log("adding reservation");
+	             $.ajax({
+	                type: "POST",
+	                url: reservationApiUrl,
+	                data: JSON.stringify({id:this.props.business.id}),
+	                contentType: "application/json",
+	                success: function(data){
+	                    this.setState({business:data});
+	                   console.log("reservation successful", data);
+	                        }.bind(this),
+	                error: function(data){
+	                   console.log("error receiving data", data);
+	                        },
+	                dataType: 'json'
+	              });
+	            }
+	        else{
+	            //user not going to business
+	            console.log("removing reservation");
+	             $.ajax({
+	                type: "DELETE",
+	                url: reservationApiUrl,
+	                data: JSON.stringify({id:this.props.business.id}),
+	                contentType: "application/json",
+	                success: function(data){
+	                    
+	                    this.setState({business:data});
+	                   console.log("reservation successful", data);
+	                        }.bind(this),
+	                error: function(data){
+	                   console.log("error receiving data", data);
+	                        },
+	                dataType: 'json'
+	              });
+	            }
+	        }else{
+	            $('#myModal').modal();
+	        }
+	        }
+	    ,
 	    renderAddress:function(addressPortion, index){
 	        return(
 	            React.createElement("div", {key: index}, addressPortion)
 	            );
+	    },
+	    getInitialState: function() {
+	     
+	        return {
+	          business: {
+	              user_reservations:[],
+	              reservation:0
+	          }
+	        };
+	      },
+	      
+	    componentDidMount: function() {
+	        var reservationApiUrl = "/openapi/reservations";
+	        console.log('getting business', this.props.business.id);
+	             $.ajax({
+	                type: "GET",
+	                url: reservationApiUrl,
+	                data: {id:this.props.business.id},
+	                contentType: "application/json",
+	                success: function(business){
+	                    if(business && business.user_reservations)
+	                    {
+	                        //if logged in, check if user has reserved business
+	                        //if()
+	                        this.setState({business:business});
+	                    
+	                    }
+	                        }.bind(this),
+	                error: function(data){
+	                    
+	                   console.log("error receiving data", data);
+	                        },
+	                dataType: 'json'
+	        });
 	    },
 	    render:function(){
 	        return(
@@ -10383,12 +10478,14 @@
 	                React.createElement("h4", null, 
 	                
 	                React.createElement("p", {className: "lead"}, 
-	                    "0 people going"
+	                    this.state.business.user_reservations.length, " ", this.state.business.user_reservations.length != 1? "people": "person", " going"
 	                    )
 	                  ), 
-	                React.createElement("select", {className: "form-control", onChange: this.handleReservationChange}, 
-	                  React.createElement("option", {defaultValue: true, value: "0"}, "Not Going"), 
-	                  React.createElement("option", {value: "1"}, "Going")
+	                React.createElement("select", {value: 
+	                this.state.business.user_reservations.indexOf(this.props.user._id) > -1, 
+	                className: "form-control", onChange: this.handleReservationChange}, 
+	                  React.createElement("option", {value: "false"}, "Not Going"), 
+	                  React.createElement("option", {value: "true"}, "Going")
 	                )
 	                
 	                )

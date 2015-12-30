@@ -41,7 +41,7 @@ module.exports = function (app, passport) {
 
 	app.route('/api/:id')
 		.get(isLoggedIn, function (req, res) {
-			res.json(req.user.github);
+			res.json(req.user);
 		});
 		
 
@@ -63,8 +63,8 @@ module.exports = function (app, passport) {
 		.post(isLoggedIn, reservationHandler.addReservation)
 		.delete(isLoggedIn, reservationHandler.removeReservation);
 		
-		
-		
+	app.route('/openapi/reservations')
+		.get(reservationHandler.getReservations);
 	
 	// app.route('/api/:id/polls')
 	// 	.get(isLoggedIn,pollHandler.getPolls)

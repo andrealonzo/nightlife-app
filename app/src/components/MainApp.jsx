@@ -5,7 +5,22 @@ var Yelp = require('yelp');
 var Business = require('./Business')
      
 module.exports =  React.createClass({
-    
+    loadLoggedInUser:function(){
+        var userApiUrl = "/api/user";
+       $.ajax({
+        type: "GET",
+        url: userApiUrl,
+        contentType: "application/json",
+        success: function(data){
+           console.log("user successfully retrieved", data);
+           this.setState({user:data});
+        }.bind(this),
+        error: function(data){
+          //user not logged in
+                }.bind(this),
+        dataType: 'json'
+      });
+      },
     handleSubmit:function(e){
         e.preventDefault();
       if(this.state.searchInput.trim() && this.state.locationInput.trim()){
@@ -41,8 +56,10 @@ module.exports =  React.createClass({
         }.bind(this));
     },
   getInitialState: function() {
-      JSON.parse(localStorage.getItem('search'));
     return {
+      user: {
+          _id:null
+      },
       searchInput: '',
       locationInput: '',
       businesses: [],
@@ -52,6 +69,7 @@ module.exports =  React.createClass({
     };
   },
   componentDidMount: function() {
+      this.loadLoggedInUser();
       var savedSearch = JSON.parse(localStorage.getItem('search'));
       if(savedSearch){
           this.search(savedSearch);
@@ -70,7 +88,7 @@ module.exports =  React.createClass({
                 <div className="col-md-1">
                 </div>
                 <div className="col-md-10">
-                    <Business business = {business}></Business>
+                    <Business business = {business} user={this.state.user}></Business>
                  </div>
                 <div className="col-md-1">
                 </div>

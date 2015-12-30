@@ -2,18 +2,95 @@
 'use strict'
 var React = require('react');
 
-     
 module.exports =  React.createClass({
+    
+     
     handleReservationChange:function(e){
-        console.log(e.target.value);
-        
-        console.log(this.props.business.id);
-        
-    },
+        //check if user is logged in
+        if(this.props.user._id){
+            
+        var reservationApiUrl = "/api/reservations";
+        //if user is going to business
+       if(e.target.value === "true"){
+           
+            console.log("adding reservation");
+             $.ajax({
+                type: "POST",
+                url: reservationApiUrl,
+                data: JSON.stringify({id:this.props.business.id}),
+                contentType: "application/json",
+                success: function(data){
+                    this.setState({business:data});
+                   console.log("reservation successful", data);
+                        }.bind(this),
+                error: function(data){
+                   console.log("error receiving data", data);
+                        },
+                dataType: 'json'
+              });
+            }
+        else{
+            //user not going to business
+            console.log("removing reservation");
+             $.ajax({
+                type: "DELETE",
+                url: reservationApiUrl,
+                data: JSON.stringify({id:this.props.business.id}),
+                contentType: "application/json",
+                success: function(data){
+                    
+                    this.setState({business:data});
+                   console.log("reservation successful", data);
+                        }.bind(this),
+                error: function(data){
+                   console.log("error receiving data", data);
+                        },
+                dataType: 'json'
+              });
+            }
+        }else{
+            $('#myModal').modal();
+        }
+        }
+    ,
     renderAddress:function(addressPortion, index){
         return(
             <div key={index}>{addressPortion}</div>
             );
+    },
+    getInitialState: function() {
+     
+        return {
+          business: {
+              user_reservations:[],
+              reservation:0
+          }
+        };
+      },
+      
+    componentDidMount: function() {
+        var reservationApiUrl = "/openapi/reservations";
+        console.log('getting business', this.props.business.id);
+             $.ajax({
+                type: "GET",
+                url: reservationApiUrl,
+                data: {id:this.props.business.id},
+                contentType: "application/json",
+                success: function(business){
+                    if(business && business.user_reservations)
+                    {
+                        //if logged in, check if user has reserved business
+                        //if()
+                        this.setState({business:business});
+                    
+                    }
+                        }.bind(this),
+                error: function(data){
+                    
+                   console.log("error receiving data", data);
+                        },
+                dataType: 'json'
+        });
     },
     render:function(){
         return(
@@ -40,12 +117,14 @@ module.exports =  React.createClass({
                 <h4>
                 
                 <p className="lead">
-                    0 people going
+                    {this.state.business.user_reservations.length} {this.state.business.user_reservations.length != 1? "people": "person" } going
                     </p>
                   </h4>  
-                <select  className="form-control" onChange = {this.handleReservationChange}>
-                  <option defaultValue value="0">Not Going</option>
-                  <option value = "1">Going</option>
+                <select value={
+                this.state.business.user_reservations.indexOf(this.props.user._id) > -1
+                } className="form-control" onChange = {this.handleReservationChange}>
+                  <option value="false">Not Going</option>
+                  <option value ="true">Going</option>
                 </select>
                 
                 </div>
