@@ -4,6 +4,12 @@ var React = require('react');
 
      
 module.exports =  React.createClass({
+    handleReservationChange:function(e){
+        console.log(e.target.value);
+        
+        console.log(this.props.business.id);
+        
+    },
     renderAddress:function(addressPortion, index){
         return(
             <div key={index}>{addressPortion}</div>
@@ -37,9 +43,9 @@ module.exports =  React.createClass({
                     0 people going
                     </p>
                   </h4>  
-                <select  className="form-control">
-                  <option defaultValue value="Not Going">Not Going</option>
-                  <option value = "Going">Going</option>
+                <select  className="form-control" onChange = {this.handleReservationChange}>
+                  <option defaultValue value="0">Not Going</option>
+                  <option value = "1">Going</option>
                 </select>
                 
                 </div>

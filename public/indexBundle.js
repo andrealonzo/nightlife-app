@@ -10347,6 +10347,12 @@
 
 	     
 	module.exports =  React.createClass({displayName: "module.exports",
+	    handleReservationChange:function(e){
+	        console.log(e.target.value);
+	        
+	        console.log(this.props.business.id);
+	        
+	    },
 	    renderAddress:function(addressPortion, index){
 	        return(
 	            React.createElement("div", {key: index}, addressPortion)
@@ -10380,9 +10386,9 @@
 	                    "0 people going"
 	                    )
 	                  ), 
-	                React.createElement("select", {className: "form-control"}, 
-	                  React.createElement("option", {defaultValue: true, value: "Not Going"}, "Not Going"), 
-	                  React.createElement("option", {value: "Going"}, "Going")
+	                React.createElement("select", {className: "form-control", onChange: this.handleReservationChange}, 
+	                  React.createElement("option", {defaultValue: true, value: "0"}, "Not Going"), 
+	                  React.createElement("option", {value: "1"}, "Going")
 	                )
 	                
 	                )
