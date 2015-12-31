@@ -82,7 +82,7 @@ module.exports =  React.createClass({
   
   renderBusiness: function(business, index) {
     return(
-        <div key = {index} className="row text-left">
+        <div key = {business.id} className="row text-left">
                 <div className="col-md-1">
                 </div>
                 <div className="col-md-10">

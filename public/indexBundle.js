@@ -247,7 +247,7 @@
 	  
 	  renderBusiness: function(business, index) {
 	    return(
-	        React.createElement("div", {key: index, className: "row text-left"}, 
+	        React.createElement("div", {key: business.id, className: "row text-left"}, 
 	                React.createElement("div", {className: "col-md-1"}
 	                ), 
 	                React.createElement("div", {className: "col-md-10"}, 
@@ -10390,6 +10390,7 @@
 	        else{
 	            //user not going to business
 	            console.log("removing reservation");
+	            this.state.business.user_reservations
 	             $.ajax({
 	                type: "DELETE",
 	                url: reservationApiUrl,
@@ -10428,6 +10429,7 @@
 	      
 	    componentDidMount: function() {
 	        var reservationApiUrl = "/openapi/reservations";
+	        console.log("is reserved", this.state.business.user_reservations.indexOf(this.props.user._id)>-1);
 	        console.log('getting business', this.props.business.id);
 	             $.ajax({
 	                type: "GET",
@@ -10440,6 +10442,7 @@
 	                        //if logged in, check if user has reserved business
 	                        //if()
 	                        this.setState({business:business});
+	                        console.log("current reservations", this.state.business.user_reservations);
 	                    
 	                    }
 	                        }.bind(this),
