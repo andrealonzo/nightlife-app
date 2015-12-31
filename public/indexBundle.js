@@ -209,7 +209,10 @@
 	            if(result.businesses){
 	                result.businesses.map(function(business, index){
 	                    var imgUrl = business.image_url;
-	                    var newImgUrl = imgUrl.replace("ms.jpg", "o.jpg");
+	                    if(imgUrl){
+	                        var newImgUrl = imgUrl.replace("ms.jpg", "o.jpg");
+	                    }
+	                    
 	                    result.businesses[index].image_url = newImgUrl;
 	                });
 	                this.setState({businesses: result.businesses});
