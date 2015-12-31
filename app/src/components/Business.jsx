@@ -116,9 +116,8 @@ module.exports =  React.createClass({
                 <div className="col-md-5">
                 <h4>
                 
-                <p className="lead">
                     {this.state.business.user_reservations.length} {this.state.business.user_reservations.length != 1? "people": "person" } going
-                    </p>
+         
                   </h4>  
                 <select value={
                 this.state.business.user_reservations.indexOf(this.props.user._id) > -1
@@ -129,12 +128,12 @@ module.exports =  React.createClass({
                 
                 </div>
             </div>
-            <p >
+            <p>
             <img src={this.props.business.image_url} className="img-responsive img-rounded"></img>
             </p>
             <div className="row review-row">
                 <div className="col-xs-2">
-                <img className="img-rounded " src={this.props.business.snippet_image_url}></img>
+                <img className="img-responsive img-rounded " src={this.props.business.snippet_image_url}></img>
                 </div>
                 <div className="col-xs-10">
                 {this.props.business.snippet_text}

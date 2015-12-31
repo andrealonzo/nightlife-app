@@ -188,36 +188,35 @@
 	      },
 	    handleSubmit:function(e){
 	        e.preventDefault();
-	      if(this.state.searchInput.trim() && this.state.locationInput.trim()){
-	        this.search({
-	            search: this.state.searchInput, 
-	            location: this.state.locationInput});
-	      }
-	    },
-	    handleSearchChange:function(e){
-	        this.setState({searchInput: e.target.value});
+	        this.search(this.state.location);
 	    },
 	    handleLocationChange:function(e){
-	        this.setState({locationInput: e.target.value});
+	        this.setState({location: e.target.value});
 	    },
-	    loadInitialLocation:function(callback){
+	    loadIPLocation:function(callback){
 	        $.get("https://freegeoip.net/json/", function(response) {
-	            this.setState({location:response});
-	            callback(response.zip_code);
+	            this.setState({location:response.city});
+	            callback(response.city);
 	        }.bind(this), "json");
 	    },
-	    search:function(searchData){
-	            localStorage.setItem('search', JSON.stringify(searchData));
+	    search:function(location){
+	            localStorage.setItem('location', JSON.stringify(location));
 	            var apiUrl = "/openapi/yelp";
 	            //get initial location
+	            var searchData = {search:'nightlife', location:location};
 	          $.get(apiUrl, searchData, function(result) {
 	            //replace with large image url
-	            result.businesses.map(function(business, index){
-	                var imgUrl = business.image_url;
-	                var newImgUrl = imgUrl.replace("ms.jpg", "o.jpg");
-	                result.businesses[index].image_url = newImgUrl;
-	            });
-	            this.setState({businesses: result.businesses});
+	            if(result.businesses){
+	                result.businesses.map(function(business, index){
+	                    var imgUrl = business.image_url;
+	                    var newImgUrl = imgUrl.replace("ms.jpg", "o.jpg");
+	                    result.businesses[index].image_url = newImgUrl;
+	                });
+	                this.setState({businesses: result.businesses});
+	            }
+	            else{
+	                this.setState({businesses:[]});
+	            }
 	        }.bind(this));
 	    },
 	  getInitialState: function() {
@@ -225,24 +224,20 @@
 	      user: {
 	          _id:null
 	      },
-	      searchInput: '',
-	      locationInput: '',
+	      searchInput: 'nightlife',
 	      businesses: [],
-	      location: {
-	          city: 'your city'
-	      }
+	      location: ''
 	    };
 	  },
 	  componentDidMount: function() {
 	      this.loadLoggedInUser();
-	      var savedSearch = JSON.parse(localStorage.getItem('search'));
-	      if(savedSearch){
-	          this.search(savedSearch);
+	      var savedLocation = JSON.parse(localStorage.getItem('location'));
+	      if(savedLocation){
+	          this.setState({location: savedLocation});
+	          this.search(savedLocation);
 	      }else{
-	        this.loadInitialLocation(function(location){
-	            this.search({
-	                search:"bars or clubs", 
-	                location:location});
+	        this.loadIPLocation(function(location){
+	            this.search(location);
 	        }.bind(this));
 	      }
 	  },
@@ -271,18 +266,14 @@
 	              ), 
 	              React.createElement("form", {onSubmit: this.handleSubmit}, 
 	                      React.createElement("div", {className: "row"}, 
-	                      
-	           React.createElement("div", {className: "col-lg-3 search-cols"}, 
+	            React.createElement("div", {className: "col-md-3"}), 
+	           React.createElement("div", {className: "col-md-5 search-cols"}, 
 	           
-	              React.createElement("input", {type: "text", className: "form-control input-lg", id: "search", onChange: this.handleLocationChange, placeholder: "Near " + this.state.location.city})
+	              React.createElement("input", {type: "text", className: "form-control input-lg", id: "search", onChange: this.handleLocationChange, placeholder: "Near your city", value: this.state.location})
 	              ), 
-	           React.createElement("div", {className: "col-lg-8 search-cols"}, 
-	           
-	     
-	              React.createElement("input", {type: "text", className: "form-control input-lg", id: "search", onChange: this.handleSearchChange, placeholder: "Find a bar or nightclub"})
-	   
-	          ), 
-	          React.createElement("div", {className: "col-lg-1 search-cols"}, React.createElement("button", {className: "btn btn-danger btn-lg btn-block", type: "submit"}, "Search"))
+
+	          React.createElement("div", {className: "col-md-1 search-cols"}, React.createElement("button", {className: "btn btn-danger btn-lg btn-block", type: "submit"}, "Search")), 
+	          React.createElement("div", {className: "col-md-3"})
 	          
 	        )
 	        )
@@ -291,7 +282,10 @@
 	            ), 
 	            
 	            React.createElement("div", {className: "container"}, 
-	            this.state.businesses.map(this.renderBusiness)
+	            this.state.businesses.length > 0?
+	                this.state.businesses.map(this.renderBusiness):
+	                React.createElement("h1", {className: "text-center"}, React.createElement("p", null, "No results found"))
+	            
 			)
 			)
 	            );
@@ -10477,9 +10471,8 @@
 	                React.createElement("div", {className: "col-md-5"}, 
 	                React.createElement("h4", null, 
 	                
-	                React.createElement("p", {className: "lead"}, 
 	                    this.state.business.user_reservations.length, " ", this.state.business.user_reservations.length != 1? "people": "person", " going"
-	                    )
+	         
 	                  ), 
 	                React.createElement("select", {value: 
 	                this.state.business.user_reservations.indexOf(this.props.user._id) > -1, 
@@ -10495,7 +10488,7 @@
 	            ), 
 	            React.createElement("div", {className: "row review-row"}, 
 	                React.createElement("div", {className: "col-xs-2"}, 
-	                React.createElement("img", {className: "img-rounded ", src: this.props.business.snippet_image_url})
+	                React.createElement("img", {className: "img-responsive img-rounded ", src: this.props.business.snippet_image_url})
 	                ), 
 	                React.createElement("div", {className: "col-xs-10"}, 
 	                this.props.business.snippet_text
