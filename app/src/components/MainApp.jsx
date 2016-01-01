@@ -5,6 +5,55 @@ var Yelp = require('yelp');
 var Business = require('./Business')
      
 module.exports =  React.createClass({
+    handleReservationChange:function(e, businessId, callback){
+        console.log("handling reservation", businessId);
+        //check if user is logged in
+        if(this.state.user._id){
+            
+        var reservationApiUrl = "/api/reservations";
+        //if user is going to business
+       if(e.target.value === "true"){
+           
+            console.log("adding reservation");
+             $.ajax({
+                type: "POST",
+                url: reservationApiUrl,
+                data: JSON.stringify({id:businessId}),
+                contentType: "application/json",
+                success: function(data){
+                    callback(data);
+                   // this.setState({business:data});
+                   console.log("reservation successful", data);
+                        }.bind(this),
+                error: function(data){
+                   console.log("error receiving data", data);
+                        },
+                dataType: 'json'
+              });
+            }
+        else{
+            //user not going to business
+            console.log("removing reservation");
+             $.ajax({
+                type: "DELETE",
+                url: reservationApiUrl,
+                data: JSON.stringify({id:businessId}),
+                contentType: "application/json",
+                success: function(data){
+                    callback(data);
+                 //   this.setState({business:data});
+                   console.log("reservation successful", data);
+                        }.bind(this),
+                error: function(data){
+                   console.log("error receiving data", data);
+                        },
+                dataType: 'json'
+              });
+            }
+        }else{
+            $('#myModal').modal();  
+        }
+    },
     loadLoggedInUser:function(){
         var userApiUrl = "/api/user";
        $.ajax({
@@ -86,7 +135,7 @@ module.exports =  React.createClass({
                 <div className="col-md-1">
                 </div>
                 <div className="col-md-10">
-                    <Business business = {business} user={this.state.user}></Business>
+                    <Business business = {business} user={this.state.user} onNeedLogin={this.handleNeedLogin} onReservationChange={this.handleReservationChange}></Business>
                  </div>
                 <div className="col-md-1">
                 </div>

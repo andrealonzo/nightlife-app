@@ -6,54 +6,11 @@ module.exports =  React.createClass({
     
      
     handleReservationChange:function(e){
-        //check if user is logged in
-        if(this.props.user._id){
-            
-        var reservationApiUrl = "/api/reservations";
-        //if user is going to business
-       if(e.target.value === "true"){
-           
-            console.log("adding reservation");
-             $.ajax({
-                type: "POST",
-                url: reservationApiUrl,
-                data: JSON.stringify({id:this.props.business.id}),
-                contentType: "application/json",
-                success: function(data){
-                    this.setState({business:data});
-                   console.log("reservation successful", data);
-                        }.bind(this),
-                error: function(data){
-                   console.log("error receiving data", data);
-                        },
-                dataType: 'json'
-              });
-            }
-        else{
-            //user not going to business
-            console.log("removing reservation");
-            this.state.business.user_reservations
-             $.ajax({
-                type: "DELETE",
-                url: reservationApiUrl,
-                data: JSON.stringify({id:this.props.business.id}),
-                contentType: "application/json",
-                success: function(data){
-                    
-                    this.setState({business:data});
-                   console.log("reservation successful", data);
-                        }.bind(this),
-                error: function(data){
-                   console.log("error receiving data", data);
-                        },
-                dataType: 'json'
-              });
-            }
-        }else{
-            $('#myModal').modal();
-        }
-        }
-    ,
+        this.props.onReservationChange(e, this.props.business.id, function(data){
+            this.setState({business:data});
+        }.bind(this));
+ 
+    },
     renderAddress:function(addressPortion, index){
         return(
             <div key={index}>{addressPortion}</div>
@@ -81,8 +38,6 @@ module.exports =  React.createClass({
                 success: function(business){
                     if(business && business.user_reservations)
                     {
-                        //if logged in, check if user has reserved business
-                        //if()
                         this.setState({business:business});
                         console.log("current reservations", this.state.business.user_reservations);
                     
@@ -122,7 +77,7 @@ module.exports =  React.createClass({
                     {this.state.business.user_reservations.length} {this.state.business.user_reservations.length != 1? "people": "person" } going
          
                   </h4>  
-                <select value={
+                <select name={this.state.business.id} value={
                 this.state.business.user_reservations.indexOf(this.props.user._id) > -1
                 } className="form-control" onChange = {this.handleReservationChange}>
                   <option value="false">Not Going</option>
