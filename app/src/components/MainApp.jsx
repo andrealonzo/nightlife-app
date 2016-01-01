@@ -6,25 +6,21 @@ var Business = require('./Business')
 var css = require("../css/main.scss");
      
 module.exports =  React.createClass({
-    makeReservation:function(businessId, status, callback){
+    makeReservation:function(businessId, status){
         var reservationApiUrl = "/api/reservations";
         //if user is going to business
        if(status === "true"){
            
-       //     console.log("adding reservation");
              $.ajax({
                 type: "POST",
                 url: reservationApiUrl,
                 data: JSON.stringify({id:businessId}),
                 contentType: "application/json",
                 success: function(businessId, data){
-                    if(callback){
-                        var businesses = this.state.businesses;
-                        var index= businesses.map(function(e) { return e.id; }).indexOf(businessId);
-                        businesses[index].user_reservations = data.user_reservations;
-                        this.setState({businesses:businesses});
-                    }
-                   // this.setState({business:data});
+                    var businesses = this.state.businesses;
+                    var index= businesses.map(function(e) { return e.id; }).indexOf(businessId);
+                    businesses[index].user_reservations = data.user_reservations;
+                    this.setState({businesses:businesses});
                    console.log("reservation successful", data);
                         }.bind(this, businessId),
                 error: function(data){
@@ -42,13 +38,10 @@ module.exports =  React.createClass({
                 data: JSON.stringify({id:businessId}),
                 contentType: "application/json",
                 success: function(data){
-                    if(callback){
-                        var businesses = this.state.businesses;
-                        var index= businesses.map(function(e) { return e.id; }).indexOf(businessId);
-                        businesses[index].user_reservations = data.user_reservations;
-                        this.setState({businesses:businesses});
-                    }
-                    this.setState({business:data});
+                    var businesses = this.state.businesses;
+                    var index= businesses.map(function(e) { return e.id; }).indexOf(businessId);
+                    businesses[index].user_reservations = data.user_reservations;
+                    this.setState({businesses:businesses});
                    console.log("reservation successful", data);
                         }.bind(this),
                 error: function(data){
@@ -58,11 +51,10 @@ module.exports =  React.createClass({
               });
             }
     },
-    handleReservationChange:function(e, businessId, callback){
-  //      console.log("handling reservation", businessId);
+    handleReservationChange:function(e, businessId){
         //check if user is logged in
         if(this.state.user._id){
-            this.makeReservation(businessId, e.target.value,callback);
+            this.makeReservation(businessId, e.target.value);
         }
         else{
             //user not logged in
@@ -107,10 +99,13 @@ module.exports =  React.createClass({
         }.bind(this), "json");
     },
     search:function(location){
+            this.setState({searching:true});
             var apiUrl = "/openapi/yelp";
             //get initial location
             var searchData = {search:'nightlife', location:location};
           $.get(apiUrl, searchData, function(result) {
+              
+            this.setState({searching:false});
             //replace with large image url
             if(result.businesses){
                 result.businesses.map(function(business, index){
@@ -166,7 +161,8 @@ module.exports =  React.createClass({
       },
       searchInput: 'nightlife',
       businesses: [],
-      location: ''
+      location: '',
+      searching:true
     };
   },
   componentDidMount: function() {
@@ -178,11 +174,10 @@ module.exports =  React.createClass({
             var savedLocation = previousState.location;
             var reservation = previousState.reservation;
           console.log("making reservation", reservation);
-          this.makeReservation(reservation.business_id, reservation.status, function(){
-              this.setState({location: savedLocation});
-              this.search(savedLocation);
-              localStorage.removeItem('previousState');
-          }.bind(this));
+          this.makeReservation(reservation.business_id, reservation.status);
+          this.setState({location: savedLocation});
+          this.search(savedLocation);
+          localStorage.removeItem('previousState');
       }
       else{
             this.loadIPLocation(function(location){
@@ -233,7 +228,11 @@ module.exports =  React.createClass({
             </div>
             
             <div className="container">
-            {this.state.businesses.length > 0?
+            {this.state.searching?
+                <div className="text-center">
+                <p><img src="/public/img/ajax-loader.gif"></img></p>
+                </div>:
+                this.state.businesses.length > 0?
                 this.state.businesses.map(this.renderBusiness):
                 <h1 className="text-center"><p>No results found</p></h1>
             }

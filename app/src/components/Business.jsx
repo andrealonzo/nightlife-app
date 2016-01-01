@@ -4,12 +4,8 @@ var React = require('react');
 
 module.exports =  React.createClass({
     
-     
     handleReservationChange:function(e){
-        this.props.onReservationChange(e, this.props.business.id, function(data){
-         //   this.setState({business:data});
-        }.bind(this));
- 
+        this.props.onReservationChange(e, this.props.business.id);
     },
     renderAddress:function(addressPortion, index){
         return(
