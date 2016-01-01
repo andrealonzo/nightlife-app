@@ -17,13 +17,16 @@ module.exports =  React.createClass({
                 url: reservationApiUrl,
                 data: JSON.stringify({id:businessId}),
                 contentType: "application/json",
-                success: function(data){
+                success: function(businessId, data){
                     if(callback){
-                        callback(data);
+                        var businesses = this.state.businesses;
+                        var index= businesses.map(function(e) { return e.id; }).indexOf(businessId);
+                        businesses[index].user_reservations = data.user_reservations;
+                        this.setState({businesses:businesses});
                     }
                    // this.setState({business:data});
                    console.log("reservation successful", data);
-                        }.bind(this),
+                        }.bind(this, businessId),
                 error: function(data){
                    console.log("error receiving data", data);
                         },
@@ -40,9 +43,12 @@ module.exports =  React.createClass({
                 contentType: "application/json",
                 success: function(data){
                     if(callback){
-                        callback(data);
+                        var businesses = this.state.businesses;
+                        var index= businesses.map(function(e) { return e.id; }).indexOf(businessId);
+                        businesses[index].user_reservations = data.user_reservations;
+                        this.setState({businesses:businesses});
                     }
-                 //   this.setState({business:data});
+                    this.setState({business:data});
                    console.log("reservation successful", data);
                         }.bind(this),
                 error: function(data){
@@ -114,13 +120,44 @@ module.exports =  React.createClass({
                     }
                     
                     result.businesses[index].image_url = newImgUrl;
+                    result.businesses[index].user_reservations=[];
                 });
                 this.setState({businesses: result.businesses});
+                this.setReservationStatuses(result.businesses);
             }
             else{
                 this.setState({businesses:[]});
             }
         }.bind(this));
+    },
+    setReservationStatuses:function(businesses){
+        var reservationApiUrl = "/openapi/reservations";
+        
+        for(var i = 0; i < businesses.length; i++){
+            
+             $.ajax({
+                type: "GET",
+                url: reservationApiUrl,
+                data: {id:businesses[i].id},
+                contentType: "application/json",
+                success: function(index, business){
+                        if(business && business.user_reservations)
+                        {
+                             var businesses = this.state.businesses;
+                            // console.log("business from api", businesses[index]);
+                             businesses[index].user_reservations = business.user_reservations;
+                            //console.log("checking stateful reservations", this.state.businesses[index].user_reservations);
+                            this.setState({businesses:businesses});
+                        }
+                    }.bind(this, i),
+                error: function(data){
+                    
+                   console.log("error receiving data", data);
+                        },
+                dataType: 'json'
+            });
+        }
+      return businesses;  
     },
   getInitialState: function() {
     return {
@@ -155,7 +192,9 @@ module.exports =  React.createClass({
   },
   
   renderBusiness: function(business, index) {
+      console.log("business key", business.id);
     return(
+        
         <div key = {business.id} className="row text-left">
                 <div className="col-md-1">
                 </div>

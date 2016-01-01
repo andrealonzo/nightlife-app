@@ -49,7 +49,7 @@
 	var ReactDOM = __webpack_require__(1)
 	var Navigation = __webpack_require__(2)
 	var MainApp = __webpack_require__(4)
-	var Footer = __webpack_require__(73)
+	var Footer = __webpack_require__(78)
 	ReactDOM.render(
 	        React.createElement(Navigation, null),
 	        document.getElementById('nav-container')
@@ -168,7 +168,7 @@
 	var React = __webpack_require__(3);
 	var Yelp = __webpack_require__(5);
 	var Business = __webpack_require__(68)
-	var css = __webpack_require__(74);
+	var css = __webpack_require__(69);
 	     
 	module.exports =  React.createClass({displayName: "module.exports",
 	    makeReservation:function(businessId, status, callback){
@@ -182,13 +182,16 @@
 	                url: reservationApiUrl,
 	                data: JSON.stringify({id:businessId}),
 	                contentType: "application/json",
-	                success: function(data){
+	                success: function(businessId, data){
 	                    if(callback){
-	                        callback(data);
+	                        var businesses = this.state.businesses;
+	                        var index= businesses.map(function(e) { return e.id; }).indexOf(businessId);
+	                        businesses[index].user_reservations = data.user_reservations;
+	                        this.setState({businesses:businesses});
 	                    }
 	                   // this.setState({business:data});
 	                   console.log("reservation successful", data);
-	                        }.bind(this),
+	                        }.bind(this, businessId),
 	                error: function(data){
 	                   console.log("error receiving data", data);
 	                        },
@@ -205,9 +208,12 @@
 	                contentType: "application/json",
 	                success: function(data){
 	                    if(callback){
-	                        callback(data);
+	                        var businesses = this.state.businesses;
+	                        var index= businesses.map(function(e) { return e.id; }).indexOf(businessId);
+	                        businesses[index].user_reservations = data.user_reservations;
+	                        this.setState({businesses:businesses});
 	                    }
-	                 //   this.setState({business:data});
+	                    this.setState({business:data});
 	                   console.log("reservation successful", data);
 	                        }.bind(this),
 	                error: function(data){
@@ -279,13 +285,44 @@
 	                    }
 	                    
 	                    result.businesses[index].image_url = newImgUrl;
+	                    result.businesses[index].user_reservations=[];
 	                });
 	                this.setState({businesses: result.businesses});
+	                this.setReservationStatuses(result.businesses);
 	            }
 	            else{
 	                this.setState({businesses:[]});
 	            }
 	        }.bind(this));
+	    },
+	    setReservationStatuses:function(businesses){
+	        var reservationApiUrl = "/openapi/reservations";
+	        
+	        for(var i = 0; i < businesses.length; i++){
+	            
+	             $.ajax({
+	                type: "GET",
+	                url: reservationApiUrl,
+	                data: {id:businesses[i].id},
+	                contentType: "application/json",
+	                success: function(index, business){
+	                        if(business && business.user_reservations)
+	                        {
+	                             var businesses = this.state.businesses;
+	                            // console.log("business from api", businesses[index]);
+	                             businesses[index].user_reservations = business.user_reservations;
+	                            //console.log("checking stateful reservations", this.state.businesses[index].user_reservations);
+	                            this.setState({businesses:businesses});
+	                        }
+	                    }.bind(this, i),
+	                error: function(data){
+	                    
+	                   console.log("error receiving data", data);
+	                        },
+	                dataType: 'json'
+	            });
+	        }
+	      return businesses;  
 	    },
 	  getInitialState: function() {
 	    return {
@@ -320,7 +357,9 @@
 	  },
 	  
 	  renderBusiness: function(business, index) {
+	      console.log("business key", business.id);
 	    return(
+	        
 	        React.createElement("div", {key: business.id, className: "row text-left"}, 
 	                React.createElement("div", {className: "col-md-1"}
 	                ), 
@@ -10443,7 +10482,7 @@
 	     
 	    handleReservationChange:function(e){
 	        this.props.onReservationChange(e, this.props.business.id, function(data){
-	            this.setState({business:data});
+	         //   this.setState({business:data});
 	        }.bind(this));
 	 
 	    },
@@ -10452,40 +10491,7 @@
 	            React.createElement("div", {key: index}, addressPortion)
 	            );
 	    },
-	    getInitialState: function() {
-	     
-	        return {
-	          business: {
-	              user_reservations:[],
-	              reservation:0
-	          }
-	        };
-	      },
-	      
-	    componentDidMount: function() {
-	        var reservationApiUrl = "/openapi/reservations";
-	        console.log("is reserved", this.state.business.user_reservations.indexOf(this.props.user._id)>-1);
-	        console.log('getting business', this.props.business.id);
-	             $.ajax({
-	                type: "GET",
-	                url: reservationApiUrl,
-	                data: {id:this.props.business.id},
-	                contentType: "application/json",
-	                success: function(business){
-	                    if(business && business.user_reservations)
-	                    {
-	                        this.setState({business:business});
-	                        console.log("current reservations", this.state.business.user_reservations);
-	                    
-	                    }
-	                        }.bind(this),
-	                error: function(data){
-	                    
-	                   console.log("error receiving data", data);
-	                        },
-	                dataType: 'json'
-	        });
-	    },
+
 	    render:function(){
 	        return(
 	        React.createElement("div", {className: "panel panel-default animated fadeIn"}, 
@@ -10510,11 +10516,11 @@
 	                React.createElement("div", {className: "col-md-5"}, 
 	                React.createElement("h4", null, 
 	                
-	                    this.state.business.user_reservations.length, " ", this.state.business.user_reservations.length != 1? "people": "person", " going"
+	                    this.props.business.user_reservations.length, " ", this.props.business.user_reservations.length != 1? "people": "person", " going"
 	         
 	                  ), 
-	                React.createElement("select", {name: this.state.business.id, value: 
-	                this.state.business.user_reservations.indexOf(this.props.user._id) > -1, 
+	                React.createElement("select", {name: this.props.business.id, value: 
+	                this.props.business.user_reservations.indexOf(this.props.user._id) > -1, 
 	                className: "form-control", onChange: this.handleReservationChange}, 
 	                  React.createElement("option", {value: "false"}, "Not Going"), 
 	                  React.createElement("option", {value: "true"}, "Going")
@@ -10543,8 +10549,46 @@
 	});
 
 /***/ },
-/* 69 */,
-/* 70 */,
+/* 69 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(70);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(72)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/index.js!./main.scss", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/index.js!./main.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(71)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".jumbotron {\n  position: relative;\n  background: #000 url(\"/public/img/15943526011_acbba23cb2_o.jpg\") center;\n  width: 100%;\n  height: 100%;\n  background-size: cover;\n  overflow: hidden; }\n\n.searchBox {\n  color: white; }\n\n.search-cols {\n  padding: 0px; }\n\n.business-name {\n  color: #cb202d;\n  font-weight: 700;\n  margin-top: 10px; }\n\n.business-body {\n  padding-top: 0px; }\n\n.appWrapper {\n  font-family: 'Roboto', sans-serif; }\n", ""]);
+
+	// exports
+
+
+/***/ },
 /* 71 */
 /***/ function(module, exports) {
 
@@ -10855,7 +10899,12 @@
 
 
 /***/ },
-/* 73 */
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
@@ -10875,46 +10924,6 @@
 			  }
 			});
 			
-
-/***/ },
-/* 74 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(75);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(72)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/index.js!./main.scss", function() {
-				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/index.js!./main.scss");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 75 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(71)();
-	// imports
-
-
-	// module
-	exports.push([module.id, ".jumbotron {\n  position: relative;\n  background: #000 url(\"/public/img/15943526011_acbba23cb2_o.jpg\") center;\n  width: 100%;\n  height: 100%;\n  background-size: cover;\n  overflow: hidden; }\n\n.searchBox {\n  color: white; }\n\n.search-cols {\n  padding: 0px; }\n\n.business-name {\n  color: #cb202d;\n  font-weight: 700;\n  margin-top: 10px; }\n\n.business-body {\n  padding-top: 0px; }\n\n.appWrapper {\n  font-family: 'Roboto', sans-serif; }\n", ""]);
-
-	// exports
-
 
 /***/ }
 /******/ ]);

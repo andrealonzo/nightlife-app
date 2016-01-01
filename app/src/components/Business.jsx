@@ -7,7 +7,7 @@ module.exports =  React.createClass({
      
     handleReservationChange:function(e){
         this.props.onReservationChange(e, this.props.business.id, function(data){
-            this.setState({business:data});
+         //   this.setState({business:data});
         }.bind(this));
  
     },
@@ -16,40 +16,7 @@ module.exports =  React.createClass({
             <div key={index}>{addressPortion}</div>
             );
     },
-    getInitialState: function() {
-     
-        return {
-          business: {
-              user_reservations:[],
-              reservation:0
-          }
-        };
-      },
-      
-    componentDidMount: function() {
-        var reservationApiUrl = "/openapi/reservations";
-        console.log("is reserved", this.state.business.user_reservations.indexOf(this.props.user._id)>-1);
-        console.log('getting business', this.props.business.id);
-             $.ajax({
-                type: "GET",
-                url: reservationApiUrl,
-                data: {id:this.props.business.id},
-                contentType: "application/json",
-                success: function(business){
-                    if(business && business.user_reservations)
-                    {
-                        this.setState({business:business});
-                        console.log("current reservations", this.state.business.user_reservations);
-                    
-                    }
-                        }.bind(this),
-                error: function(data){
-                    
-                   console.log("error receiving data", data);
-                        },
-                dataType: 'json'
-        });
-    },
+
     render:function(){
         return(
         <div className="panel panel-default animated fadeIn">
@@ -74,11 +41,11 @@ module.exports =  React.createClass({
                 <div className="col-md-5">
                 <h4>
                 
-                    {this.state.business.user_reservations.length} {this.state.business.user_reservations.length != 1? "people": "person" } going
+                    {this.props.business.user_reservations.length} {this.props.business.user_reservations.length != 1? "people": "person" } going
          
                   </h4>  
-                <select name={this.state.business.id} value={
-                this.state.business.user_reservations.indexOf(this.props.user._id) > -1
+                <select name={this.props.business.id} value={
+                this.props.business.user_reservations.indexOf(this.props.user._id) > -1
                 } className="form-control" onChange = {this.handleReservationChange}>
                   <option value="false">Not Going</option>
                   <option value ="true">Going</option>
