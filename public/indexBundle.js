@@ -170,23 +170,21 @@
 	var Business = __webpack_require__(68)
 	     
 	module.exports =  React.createClass({displayName: "module.exports",
-	    handleReservationChange:function(e, businessId, callback){
-	        console.log("handling reservation", businessId);
-	        //check if user is logged in
-	        if(this.state.user._id){
-	            
+	    makeReservation:function(businessId, status, callback){
 	        var reservationApiUrl = "/api/reservations";
 	        //if user is going to business
-	       if(e.target.value === "true"){
+	       if(status === "true"){
 	           
-	            console.log("adding reservation");
+	       //     console.log("adding reservation");
 	             $.ajax({
 	                type: "POST",
 	                url: reservationApiUrl,
 	                data: JSON.stringify({id:businessId}),
 	                contentType: "application/json",
 	                success: function(data){
-	                    callback(data);
+	                    if(callback){
+	                        callback(data);
+	                    }
 	                   // this.setState({business:data});
 	                   console.log("reservation successful", data);
 	                        }.bind(this),
@@ -198,14 +196,16 @@
 	            }
 	        else{
 	            //user not going to business
-	            console.log("removing reservation");
+	       //     console.log("removing reservation");
 	             $.ajax({
 	                type: "DELETE",
 	                url: reservationApiUrl,
 	                data: JSON.stringify({id:businessId}),
 	                contentType: "application/json",
 	                success: function(data){
-	                    callback(data);
+	                    if(callback){
+	                        callback(data);
+	                    }
 	                 //   this.setState({business:data});
 	                   console.log("reservation successful", data);
 	                        }.bind(this),
@@ -215,7 +215,23 @@
 	                dataType: 'json'
 	              });
 	            }
-	        }else{
+	    },
+	    handleReservationChange:function(e, businessId, callback){
+	  //      console.log("handling reservation", businessId);
+	        //check if user is logged in
+	        if(this.state.user._id){
+	            this.makeReservation(businessId, e.target.value,callback);
+	        }
+	        else{
+	            //user not logged in
+	            //save search and reservation locally
+	            
+	            localStorage.setItem('previousState', JSON.stringify({
+	                location: this.state.location,
+	                reservation:{
+	                status: e.target.value,
+	                business_id: businessId
+	                }}));
 	            $('#myModal').modal();  
 	        }
 	    },
@@ -249,7 +265,6 @@
 	        }.bind(this), "json");
 	    },
 	    search:function(location){
-	            localStorage.setItem('location', JSON.stringify(location));
 	            var apiUrl = "/openapi/yelp";
 	            //get initial location
 	            var searchData = {search:'nightlife', location:location};
@@ -283,12 +298,21 @@
 	  },
 	  componentDidMount: function() {
 	      this.loadLoggedInUser();
-	      var savedLocation = JSON.parse(localStorage.getItem('location'));
-	      if(savedLocation){
-	          this.setState({location: savedLocation});
-	          this.search(savedLocation);
-	      }else{
-	        this.loadIPLocation(function(location){
+	      var previousState = JSON.parse(localStorage.getItem('previousState'));
+
+
+	      if(previousState){
+	            var savedLocation = previousState.location;
+	            var reservation = previousState.reservation;
+	          console.log("making reservation", reservation);
+	          this.makeReservation(reservation.business_id, reservation.status, function(){
+	              this.setState({location: savedLocation});
+	              this.search(savedLocation);
+	              localStorage.removeItem('previousState');
+	          }.bind(this));
+	      }
+	      else{
+	            this.loadIPLocation(function(location){
 	            this.search(location);
 	        }.bind(this));
 	      }
@@ -321,7 +345,7 @@
 	            React.createElement("div", {className: "col-md-3"}), 
 	           React.createElement("div", {className: "col-md-5 search-cols"}, 
 	           
-	              React.createElement("input", {type: "text", className: "form-control input-lg", id: "search", onChange: this.handleLocationChange, placeholder: "Near your city", value: this.state.location})
+	              React.createElement("input", {type: "text", className: "form-control input-lg", id: "search", onChange: this.handleLocationChange, placeholder: "Near address, neighborhood, city, state, or zip", value: this.state.location})
 	              ), 
 
 	          React.createElement("div", {className: "col-md-1 search-cols"}, React.createElement("button", {className: "btn btn-danger btn-lg btn-block", type: "submit"}, "Search")), 
