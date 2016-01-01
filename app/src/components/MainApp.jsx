@@ -3,6 +3,7 @@
 var React = require('react');
 var Yelp = require('yelp');
 var Business = require('./Business')
+var css = require("../css/main.scss");
      
 module.exports =  React.createClass({
     makeReservation:function(businessId, status, callback){
