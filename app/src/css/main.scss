@@ -1,6 +1,7 @@
+$banner-img-url:   "/public/img/15943526011_acbba23cb2_o.jpg";
 .jumbotron {
     position: relative;
-    background: #000 url("/public/img/15943526011_acbba23cb2_o.jpg") center center;
+    background: #000 url($banner-img-url) center;
     width: 100%;
     height: 100%;
     background-size: cover;
@@ -27,5 +28,4 @@
 
 .appWrapper {
 	font-family: 'Roboto', sans-serif;
-
 }

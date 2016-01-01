@@ -10911,7 +10911,7 @@
 
 
 	// module
-	exports.push([module.id, ".jumbotron {\n  position: relative;\n  background: #000 url(\"/public/img/15943526011_acbba23cb2_o.jpg\") center center;\n  width: 100%;\n  height: 100%;\n  background-size: cover;\n  overflow: hidden; }\n\n.searchBox {\n  color: white; }\n\n.search-cols {\n  padding: 0px; }\n\n.business-name {\n  color: #cb202d;\n  font-weight: 700;\n  margin-top: 10px; }\n\n.business-body {\n  padding-top: 0px; }\n\n.appWrapper {\n  font-family: 'Roboto', sans-serif; }\n", ""]);
+	exports.push([module.id, ".jumbotron {\n  position: relative;\n  background: #000 url(\"/public/img/15943526011_acbba23cb2_o.jpg\") center;\n  width: 100%;\n  height: 100%;\n  background-size: cover;\n  overflow: hidden; }\n\n.searchBox {\n  color: white; }\n\n.search-cols {\n  padding: 0px; }\n\n.business-name {\n  color: #cb202d;\n  font-weight: 700;\n  margin-top: 10px; }\n\n.business-body {\n  padding-top: 0px; }\n\n.appWrapper {\n  font-family: 'Roboto', sans-serif; }\n", ""]);
 
 	// exports
 
