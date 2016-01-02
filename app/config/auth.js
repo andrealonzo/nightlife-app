@@ -5,5 +5,10 @@ module.exports = {
 		'clientID': process.env.GITHUB_KEY,
 		'clientSecret': process.env.GITHUB_SECRET,
 		'callbackURL': process.env.APP_URL + 'auth/github/callback'
+	},
+	'facebookAuth': {
+		'clientID': process.env.FACEBOOK_APP_ID,
+		'clientSecret': process.env.FACEBOOK_APP_SECRET,
+		'callbackURL': process.env.APP_URL + 'auth/facebook/callback'
 	}
 };
