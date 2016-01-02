@@ -4,7 +4,13 @@ var React = require("react");
 module.exports = React.createClass({
 		  render:function(){
 		    return(
-        <div>
+		        <div className="modal-content">
+      <div className="modal-header">
+        <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 className="modal-title text-center" id="myModalLabel">Log Into Urbane Dives</h4>
+      </div>
+      <div className="modal-body text-center">
+    
         <div>
         <a className="btn btn-primary btn-lg btn-block login-button" href="/auth/facebook" role="button">
             <div className="row ">
@@ -52,18 +58,22 @@ module.exports = React.createClass({
 		or use your email address
 		<div className="row">
 		  <div className="col-xs-6">
-    		<a className="btn btn-default btn-lg btn-block login-button" href="/auth/github" role="button">
+    		<a className="btn btn-default btn-lg btn-block" role="button" onClick={this.props.onLoginClick}>
     		Login
     		</a>
     		</div>
 		  <div className="col-xs-6">
-    		<a className="btn btn-default btn-lg btn-block login-button" href="/auth/github" role="button">
+    		<a className="btn btn-default btn-lg btn-block" role="button" onClick={this.props.onSignupClick}>
     		Signup
     		</a>
     		</div>
     	</div>
 		</div>
-	</div>
+		
+      </div>
+      <div className="modal-footer">
+      </div>
+    </div>
 
 )
 		  }

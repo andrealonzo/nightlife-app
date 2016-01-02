@@ -10889,22 +10889,51 @@
 	'use strict'
 	var React = __webpack_require__(3);
 	var ExternalLoginOptions = __webpack_require__(75);
+	var Signup = __webpack_require__(76);
+	var LocalLogin = __webpack_require__(77);
+
 	module.exports = React.createClass({displayName: "module.exports",
+	      handleSignupSubmit:function(){
+	      },
+	      handleLoginSubmit:function(){
+	      },
+	      handleBackClickOnLocalLogin:function(){
+	        this.setState({showPage:"ExternalLoginOptions"});
+	      },
+	      handleBackClickOnSignup:function(){
+	        this.setState({showPage:"ExternalLoginOptions"});
+	      },
+	      handleLoginClick:function(){
+	        this.setState({showPage:"LocalLogin"});
+	      },
+	      handleSignupClick:function(){
+	        this.setState({showPage:"Signup"});
+	      },
+	      getInitialState:function(){
+	        return({
+	          showPage:"ExternalLoginOptions"
+	        });
+	      },
 			  render:function(){
 			    return(
 	React.createElement("div", {className: "modal fade", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel"}, 
 	  React.createElement("div", {className: "modal-dialog modal-sm", role: "document"}, 
-	    React.createElement("div", {className: "modal-content"}, 
-	      React.createElement("div", {className: "modal-header"}, 
-	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
-	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into Urbane Dives")
-	      ), 
-	      React.createElement("div", {className: "modal-body text-center"}, 
-	        React.createElement(ExternalLoginOptions, null)
-	      ), 
-	      React.createElement("div", {className: "modal-footer"}
-	      )
-	    )
+	        this.state.showPage==='ExternalLoginOptions'?
+	          React.createElement(ExternalLoginOptions, {
+	            onSignupClick: this.handleSignupClick, 
+	            onLoginClick: this.handleLoginClick}
+	          ):
+	          this.state.showPage==="Signup"?
+	          React.createElement(Signup, {
+	            onBackClick: this.handleBackClickOnSignup, 
+	            onSubmit: this.handleSignupSubmit}
+	          ):
+	          React.createElement(LocalLogin, {
+	            onBackClick: this.handleBackClickOnLocalLogin, 
+	            onSubmit: this.handleLoginSubmit}
+	          )
+	        
+	        
 	  )
 	)
 
@@ -10945,7 +10974,13 @@
 	module.exports = React.createClass({displayName: "module.exports",
 			  render:function(){
 			    return(
-	        React.createElement("div", null, 
+			        React.createElement("div", {className: "modal-content"}, 
+	      React.createElement("div", {className: "modal-header"}, 
+	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
+	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into Urbane Dives")
+	      ), 
+	      React.createElement("div", {className: "modal-body text-center"}, 
+	    
 	        React.createElement("div", null, 
 	        React.createElement("a", {className: "btn btn-primary btn-lg btn-block login-button", href: "/auth/facebook", role: "button"}, 
 	            React.createElement("div", {className: "row "}, 
@@ -10993,18 +11028,121 @@
 			"or use your email address", 
 			React.createElement("div", {className: "row"}, 
 			  React.createElement("div", {className: "col-xs-6"}, 
-	    		React.createElement("a", {className: "btn btn-default btn-lg btn-block login-button", href: "/auth/github", role: "button"}, 
+	    		React.createElement("a", {className: "btn btn-default btn-lg btn-block", role: "button", onClick: this.props.onLoginClick}, 
 	    		"Login"
 	    		)
 	    		), 
 			  React.createElement("div", {className: "col-xs-6"}, 
-	    		React.createElement("a", {className: "btn btn-default btn-lg btn-block login-button", href: "/auth/github", role: "button"}, 
+	    		React.createElement("a", {className: "btn btn-default btn-lg btn-block", role: "button", onClick: this.props.onSignupClick}, 
 	    		"Signup"
 	    		)
 	    		)
 	    	)
 			)
-		)
+			
+	      ), 
+	      React.createElement("div", {className: "modal-footer"}
+	      )
+	    )
+
+	)
+			  }
+			});
+			
+
+/***/ },
+/* 76 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(3);
+	module.exports = React.createClass({displayName: "module.exports",
+			  render:function(){
+			    return(
+			        React.createElement("div", {className: "modal-content"}, 
+	      React.createElement("div", {className: "modal-header"}, 
+	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
+	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Register")
+	      ), 
+	      React.createElement("div", {className: "modal-body text-left"}, 
+	            React.createElement("form", null, 
+	          React.createElement("div", {className: "form-group"}, 
+	            React.createElement("label", null, "Full Name"), 
+	            React.createElement("input", {type: "text", className: "form-control", id: "Full Name"})
+	          ), 
+	          React.createElement("div", {className: "form-group"}, 
+	            React.createElement("label", null, "Email address"), 
+	            React.createElement("input", {type: "email", className: "form-control", id: "exampleInputEmail1"})
+	          ), 
+	          React.createElement("div", {className: "form-group"}, 
+	            React.createElement("label", null, "Password"), 
+	            React.createElement("input", {type: "password", className: "form-control", id: "exampleInputPassword1"})
+	          ), 
+	          React.createElement("div", {className: "row"}, 
+	          React.createElement("div", {className: "col-xs-6"}, 
+	          React.createElement("button", {type: "button", className: "btn btn-default", onClick: this.props.onBackClick}, React.createElement("span", {className: "glyphicon glyphicon-chevron-left", "aria-hidden": "true"}), " Back")
+	          ), 
+	          React.createElement("div", {className: "col-xs-6 text-right"}, 
+	          React.createElement("button", {type: "submit", className: "btn btn-default"}, "Submit")
+	          )
+	          )
+	        )
+	      
+	    
+			
+	        
+
+			
+	      ), 
+	      React.createElement("div", {className: "modal-footer"}
+	      )
+	    )
+
+	)
+			  }
+			});
+			
+
+/***/ },
+/* 77 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(3);
+	module.exports = React.createClass({displayName: "module.exports",
+			  render:function(){
+			    return(
+			        React.createElement("div", {className: "modal-content"}, 
+	      React.createElement("div", {className: "modal-header"}, 
+	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
+	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into Urbane Dives")
+	      ), 
+	      React.createElement("div", {className: "modal-body text-left"}, 
+	            React.createElement("form", null, 
+	          React.createElement("div", {className: "form-group"}, 
+	            React.createElement("label", null, "Email address"), 
+	            React.createElement("input", {type: "email", className: "form-control", id: "exampleInputEmail1"})
+	          ), 
+	          React.createElement("div", {className: "form-group"}, 
+	            React.createElement("label", null, "Password"), 
+	            React.createElement("input", {type: "password", className: "form-control", id: "exampleInputPassword1"})
+	          ), 
+	          React.createElement("div", {className: "row"}, 
+	          React.createElement("div", {className: "col-xs-6"}, 
+	          React.createElement("button", {type: "button", className: "btn btn-default", onClick: this.props.onBackClick}, React.createElement("span", {className: "glyphicon glyphicon-chevron-left", "aria-hidden": "true"}), " Back")
+	          ), 
+	          React.createElement("div", {className: "col-xs-6 text-right"}, 
+	          React.createElement("button", {type: "submit", className: "btn btn-default"}, "Login")
+	          )
+	          )
+	        )
+
+	      ), 
+	      React.createElement("div", {className: "modal-footer"}
+	      )
+	    )
 
 	)
 			  }
