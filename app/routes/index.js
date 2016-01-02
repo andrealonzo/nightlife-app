@@ -3,6 +3,7 @@
 var path = process.cwd();
 var YelpHandler = require(path + '/app/controllers/yelpHandler.server.js');
 var ReservationHandler = require(path + '/app/controllers/reservationHandler.server.js');
+var UserHandler = require(path + '/app/controllers/userHandler.server.js');
 
 module.exports = function (app, passport) {
 
@@ -16,6 +17,7 @@ module.exports = function (app, passport) {
 
 	var yelpHandler = new YelpHandler();
 	var reservationHandler = new ReservationHandler();
+	var userHandler = new UserHandler();
 	
 
 	app.route('/')
@@ -82,5 +84,8 @@ module.exports = function (app, passport) {
 	
 	app.route('/openapi/yelp')
 		.get(yelpHandler.getResults);
+		
+	app.route('/openapi/user/signup')
+		.post(userHandler.signup);
 		
 };

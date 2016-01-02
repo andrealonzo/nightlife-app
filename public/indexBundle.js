@@ -10893,9 +10893,11 @@
 	var LocalLogin = __webpack_require__(77);
 
 	module.exports = React.createClass({displayName: "module.exports",
-	      handleSignupSubmit:function(){
+	      handleSignupSubmit:function(signup){
+	        console.log(signup);
 	      },
-	      handleLoginSubmit:function(){
+	      handleLoginSubmit:function(login){
+	        console.log(login);
 	      },
 	      handleBackClickOnLocalLogin:function(){
 	        this.setState({showPage:"ExternalLoginOptions"});
@@ -10909,6 +10911,7 @@
 	      handleSignupClick:function(){
 	        this.setState({showPage:"Signup"});
 	      },
+
 	      getInitialState:function(){
 	        return({
 	          showPage:"ExternalLoginOptions"
@@ -10926,11 +10929,13 @@
 	          this.state.showPage==="Signup"?
 	          React.createElement(Signup, {
 	            onBackClick: this.handleBackClickOnSignup, 
-	            onSubmit: this.handleSignupSubmit}
+	            onSubmit: this.handleSignupSubmit
+	            }
 	          ):
 	          React.createElement(LocalLogin, {
 	            onBackClick: this.handleBackClickOnLocalLogin, 
-	            onSubmit: this.handleLoginSubmit}
+	            onSubmit: this.handleLoginSubmit
+	            }
 	          )
 	        
 	        
@@ -11028,12 +11033,12 @@
 			"or use your email address", 
 			React.createElement("div", {className: "row"}, 
 			  React.createElement("div", {className: "col-xs-6"}, 
-	    		React.createElement("a", {className: "btn btn-default btn-lg btn-block", role: "button", onClick: this.props.onLoginClick}, 
+	    		React.createElement("a", {className: "btn btn-default btn-block", role: "button", onClick: this.props.onLoginClick}, 
 	    		"Login"
 	    		)
 	    		), 
 			  React.createElement("div", {className: "col-xs-6"}, 
-	    		React.createElement("a", {className: "btn btn-default btn-lg btn-block", role: "button", onClick: this.props.onSignupClick}, 
+	    		React.createElement("a", {className: "btn btn-default btn-block", role: "button", onClick: this.props.onSignupClick}, 
 	    		"Signup"
 	    		)
 	    		)
@@ -11058,6 +11063,26 @@
 	'use strict'
 	var React = __webpack_require__(3);
 	module.exports = React.createClass({displayName: "module.exports",
+	      handleSubmit:function(e){
+	        e.preventDefault();
+	        this.props.onSubmit(this.state);
+	      },
+	      handleEmailChange:function(e){
+	        this.setState({email:e.target.value});
+	      },
+	      handlePasswordChange:function(e){
+	        this.setState({password:e.target.value});
+	      },
+	      handleConfirmPasswordChange:function(e){
+	        this.setState({confirmPassword:e.target.value});
+	      },
+	      getInitialState:function(){
+	        return{
+	          email:'',
+	          password:'',
+	          confirmPassword:''
+	        }
+	      },
 			  render:function(){
 			    return(
 			        React.createElement("div", {className: "modal-content"}, 
@@ -11066,18 +11091,18 @@
 	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Register")
 	      ), 
 	      React.createElement("div", {className: "modal-body text-left"}, 
-	            React.createElement("form", null, 
-	          React.createElement("div", {className: "form-group"}, 
-	            React.createElement("label", null, "Full Name"), 
-	            React.createElement("input", {type: "text", className: "form-control", id: "Full Name"})
-	          ), 
+	            React.createElement("form", {onSubmit: this.handleSubmit}, 
 	          React.createElement("div", {className: "form-group"}, 
 	            React.createElement("label", null, "Email address"), 
-	            React.createElement("input", {type: "email", className: "form-control", id: "exampleInputEmail1"})
+	            React.createElement("input", {type: "email", className: "form-control", id: "exampleInputEmail1", value: this.state.email, onChange: this.handleEmailChange})
 	          ), 
 	          React.createElement("div", {className: "form-group"}, 
 	            React.createElement("label", null, "Password"), 
-	            React.createElement("input", {type: "password", className: "form-control", id: "exampleInputPassword1"})
+	            React.createElement("input", {type: "password", className: "form-control", id: "exampleInputPassword1", value: this.state.password, onChange: this.handlePasswordChange})
+	          ), 
+	          React.createElement("div", {className: "form-group"}, 
+	            React.createElement("label", null, "Confirm Password"), 
+	            React.createElement("input", {type: "password", className: "form-control", id: "exampleInputPassword1", value: this.state.confirmPassword, onChange: this.handleConfirmPasswordChange})
 	          ), 
 	          React.createElement("div", {className: "row"}, 
 	          React.createElement("div", {className: "col-xs-6"}, 
@@ -11112,6 +11137,22 @@
 	'use strict'
 	var React = __webpack_require__(3);
 	module.exports = React.createClass({displayName: "module.exports",
+	      handleSubmit:function(e){
+	        e.preventDefault();
+	        this.props.onSubmit(this.state);
+	      },
+	      handleEmailChange:function(e){
+	        this.setState({email:e.target.value});
+	      },
+	      handlePasswordChange:function(e){
+	        this.setState({password:e.target.value});
+	      },
+	      getInitialState:function(){
+	        return({
+	          email:'',
+	          password:''
+	        });
+	      },
 			  render:function(){
 			    return(
 			        React.createElement("div", {className: "modal-content"}, 
@@ -11120,14 +11161,14 @@
 	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into Urbane Dives")
 	      ), 
 	      React.createElement("div", {className: "modal-body text-left"}, 
-	            React.createElement("form", null, 
+	            React.createElement("form", {onSubmit: this.handleSubmit}, 
 	          React.createElement("div", {className: "form-group"}, 
 	            React.createElement("label", null, "Email address"), 
-	            React.createElement("input", {type: "email", className: "form-control", id: "exampleInputEmail1"})
+	            React.createElement("input", {type: "email", className: "form-control", id: "exampleInputEmail1", value: this.state.email, onChange: this.handleEmailChange})
 	          ), 
 	          React.createElement("div", {className: "form-group"}, 
 	            React.createElement("label", null, "Password"), 
-	            React.createElement("input", {type: "password", className: "form-control", id: "exampleInputPassword1"})
+	            React.createElement("input", {type: "password", className: "form-control", id: "exampleInputPassword1", value: this.state.password, onChange: this.handlePasswordChange})
 	          ), 
 	          React.createElement("div", {className: "row"}, 
 	          React.createElement("div", {className: "col-xs-6"}, 

@@ -58,12 +58,12 @@ module.exports = React.createClass({
 		or use your email address
 		<div className="row">
 		  <div className="col-xs-6">
-    		<a className="btn btn-default btn-lg btn-block" role="button" onClick={this.props.onLoginClick}>
+    		<a className="btn btn-default btn-block" role="button" onClick={this.props.onLoginClick}>
     		Login
     		</a>
     		</div>
 		  <div className="col-xs-6">
-    		<a className="btn btn-default btn-lg btn-block" role="button" onClick={this.props.onSignupClick}>
+    		<a className="btn btn-default btn-block" role="button" onClick={this.props.onSignupClick}>
     		Signup
     		</a>
     		</div>

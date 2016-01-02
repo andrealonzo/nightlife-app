@@ -6,9 +6,11 @@ var Signup = require("./Signup");
 var LocalLogin = require("./LocalLogin");
 
 module.exports = React.createClass({
-      handleSignupSubmit:function(){
+      handleSignupSubmit:function(signup){
+        console.log(signup);
       },
-      handleLoginSubmit:function(){
+      handleLoginSubmit:function(login){
+        console.log(login);
       },
       handleBackClickOnLocalLogin:function(){
         this.setState({showPage:"ExternalLoginOptions"});
@@ -22,6 +24,7 @@ module.exports = React.createClass({
       handleSignupClick:function(){
         this.setState({showPage:"Signup"});
       },
+
       getInitialState:function(){
         return({
           showPage:"ExternalLoginOptions"
@@ -39,11 +42,13 @@ module.exports = React.createClass({
           this.state.showPage==="Signup"?
           <Signup 
             onBackClick = {this.handleBackClickOnSignup} 
-            onSubmit = {this.handleSignupSubmit}>
+            onSubmit = {this.handleSignupSubmit}
+            >
           </Signup>:
           <LocalLogin 
             onBackClick = {this.handleBackClickOnLocalLogin}
-            onSubmit = {this.handleLoginSubmit}>
+            onSubmit = {this.handleLoginSubmit}
+            >
           </LocalLogin>
         }
         
