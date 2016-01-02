@@ -54,10 +54,14 @@ module.exports = function (app, passport) {
 			failureRedirect: '/login'
 		}));
 
-	// app.route('/api/:id/clicks')
-	// 	.get(isLoggedIn, clickHandler.getClicks)
-	// 	.post(isLoggedIn, clickHandler.addClick)
-	// 	.delete(isLoggedIn, clickHandler.resetClicks);
+	app.route('/auth/facebook')
+		.get(passport.authenticate('facebook'));
+
+	app.route('/auth/facebook/callback')
+		.get(passport.authenticate('facebook', {
+			successRedirect: '/',
+			failureRedirect: '/login'
+		}));
 		
 	app.route('/api/reservations')
 		.post(isLoggedIn, reservationHandler.addReservation)
@@ -66,23 +70,7 @@ module.exports = function (app, passport) {
 	app.route('/openapi/reservations')
 		.get(reservationHandler.getReservations);
 	
-	// app.route('/api/:id/polls')
-	// 	.get(isLoggedIn,pollHandler.getPolls)
-	// 	.post(isLoggedIn, pollHandler.addPoll)
-	// 	.delete(isLoggedIn, pollHandler.deletePoll);
-		
-	// app.route('/openapi/getPoll')
-	// 	.get(pollHandler.getPolls);
-		
 	app.route('/openapi/yelp')
 		.get(yelpHandler.getResults);
 		
-	app.route('/vote')
-		.get(function (req, res) {
-			res.sendFile(path + '/public/vote.html');
-		});
-	app.route('/test')
-		.get(function (req, res) {
-			res.sendFile(path + '/public/test.html');
-		});
 };

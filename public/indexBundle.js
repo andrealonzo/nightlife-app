@@ -49,8 +49,8 @@
 	var ReactDOM = __webpack_require__(1)
 	var Navigation = __webpack_require__(2)
 	var MainApp = __webpack_require__(4)
-	var Login = __webpack_require__(74)
-	var Footer = __webpack_require__(73)
+	var Login = __webpack_require__(73)
+	var Footer = __webpack_require__(74)
 	ReactDOM.render(
 	        React.createElement(Navigation, null),
 	        document.getElementById('nav-container')
@@ -134,23 +134,6 @@
 	    )
 	  )
 	  
-	), 
-	React.createElement("div", {className: "modal fade", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel"}, 
-	  React.createElement("div", {className: "modal-dialog", role: "document"}, 
-	    React.createElement("div", {className: "modal-content"}, 
-	      React.createElement("div", {className: "modal-header"}, 
-	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
-	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into Urbane Dives")
-	      ), 
-	      React.createElement("div", {className: "modal-body text-center"}, 
-	        React.createElement("a", {className: "btn btn-primary btn-lg", href: "/auth/github", role: "button"}, 
-							React.createElement("img", {src: "/public/img/github_32px.png", alt: "github logo"}), 
-							"LOGIN WITH GITHUB")
-	      ), 
-	      React.createElement("div", {className: "modal-footer"}
-	      )
-	    )
-	  )
 	)
 
 	)
@@ -10583,7 +10566,7 @@
 
 
 	// module
-	exports.push([module.id, ".jumbotron {\n  position: relative;\n  background: #000 url(\"/public/img/15943526011_acbba23cb2_o.jpg\") center;\n  width: 100%;\n  height: 100%;\n  background-size: cover;\n  overflow: hidden; }\n\n.searchBox {\n  color: white; }\n\n.search-cols {\n  padding: 0px; }\n\n.business-name {\n  color: #cb202d;\n  font-weight: 700;\n  margin-top: 10px; }\n\n.business-body {\n  padding-top: 0px; }\n\n.appWrapper {\n  font-family: 'Roboto', sans-serif; }\n", ""]);
+	exports.push([module.id, ".jumbotron {\n  position: relative;\n  background: #000 url(\"/public/img/15943526011_acbba23cb2_o.jpg\") center;\n  width: 100%;\n  height: 100%;\n  background-size: cover;\n  overflow: hidden; }\n\n.searchBox {\n  color: white; }\n\n.search-cols {\n  padding: 0px; }\n\n.business-name {\n  color: #cb202d;\n  font-weight: 700;\n  margin-top: 10px; }\n\n.business-body {\n  padding-top: 0px; }\n\n.appWrapper {\n  font-family: 'Roboto', sans-serif; }\n\n.login-button {\n  margin-top: 10px; }\n", ""]);
 
 	// exports
 
@@ -10906,15 +10889,66 @@
 	'use strict'
 	var React = __webpack_require__(3);
 	module.exports = React.createClass({displayName: "module.exports",
-	    
 			  render:function(){
 			    return(
-			      
-			React.createElement("nav", {className: "navbar navbar-default"}, 
-	          React.createElement("div", {className: "container text-center"}, 
-	           "API provided by Yelp.com.  Site design inspired by zomato.com."
-	          )
-	        )
+	React.createElement("div", {className: "modal fade", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel"}, 
+	  React.createElement("div", {className: "modal-dialog modal-sm", role: "document"}, 
+	    React.createElement("div", {className: "modal-content"}, 
+	      React.createElement("div", {className: "modal-header"}, 
+	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
+	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into Urbane Dives")
+	      ), 
+	      React.createElement("div", {className: "modal-body text-center"}, 
+	      
+	        React.createElement("div", null, 
+	        React.createElement("a", {className: "btn btn-primary btn-lg btn-block login-button", href: "/auth/facebook", role: "button"}, 
+	            React.createElement("div", {className: "row "}, 
+	              React.createElement("div", {className: "col-xs-2"}, 
+							React.createElement("i", {className: "fa fa-facebook fa-lg modal-icons"})
+							), 
+							
+	              React.createElement("div", {className: "col-xs-2"}, 
+							"LOGIN WITH FACEBOOK"
+							)
+							
+							)
+							)
+			), 
+			React.createElement("div", null, 
+			"Recommended. And we will never post anything without your permission."
+			), 
+	        React.createElement("div", null, 
+	        React.createElement("a", {className: "btn btn-danger btn-lg btn-block login-button", href: "/auth/google", role: "button"}, 
+	           React.createElement("div", {className: "row "}, 
+	              React.createElement("div", {className: "col-xs-2"}, 
+	  						React.createElement("i", {className: "fa fa-google-plus fa-lg modal-icons"})
+	  						), 
+	  						React.createElement("div", {className: "col-xs-10 text-left"}, 
+	  						"LOGIN WITH GOOGLE"
+	  						)
+							)
+							)
+			), 
+			
+	        React.createElement("div", null, 
+	        React.createElement("a", {className: "btn btn-warning btn-lg btn-block login-button", href: "/auth/github", role: "button"}, 
+	         React.createElement("div", {className: "row "}, 
+	              React.createElement("div", {className: "col-xs-2"}, 
+								React.createElement("i", {className: "fa fa-github fa-lg modal-icons"})
+								), 
+								React.createElement("div", {className: "col-xs-10 text-left"}, 
+							"LOGIN WITH GITHUB"
+							)
+							)
+							)
+			)
+	      ), 
+	      React.createElement("div", {className: "modal-footer"}
+	      )
+	    )
+	  )
+	)
+
 	)
 			  }
 			});
@@ -10928,26 +10962,15 @@
 	'use strict'
 	var React = __webpack_require__(3);
 	module.exports = React.createClass({displayName: "module.exports",
+	    
 			  render:function(){
 			    return(
-	React.createElement("div", {className: "modal fade", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel"}, 
-	  React.createElement("div", {className: "modal-dialog", role: "document"}, 
-	    React.createElement("div", {className: "modal-content"}, 
-	      React.createElement("div", {className: "modal-header"}, 
-	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
-	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into Urbane Dives")
-	      ), 
-	      React.createElement("div", {className: "modal-body text-center"}, 
-	        React.createElement("a", {className: "btn btn-primary btn-lg", href: "/auth/github", role: "button"}, 
-							React.createElement("img", {src: "/public/img/github_32px.png", alt: "github logo"}), 
-							"LOGIN WITH GITHUB")
-	      ), 
-	      React.createElement("div", {className: "modal-footer"}
-	      )
-	    )
-	  )
-	)
-
+			      
+			React.createElement("nav", {className: "navbar navbar-default"}, 
+	          React.createElement("div", {className: "container text-center"}, 
+	           "API provided by Yelp.com.  Site design inspired by zomato.com."
+	          )
+	        )
 	)
 			  }
 			});
