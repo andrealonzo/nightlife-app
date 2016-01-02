@@ -33,7 +33,6 @@ module.exports = function (passport) {
 					return done(null, user);
 				} else {
 					var newUser = new User();
-					
 					newUser.google.id = profile.id;
 					newUser.google.displayName = profile.displayName;
 					

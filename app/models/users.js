@@ -12,6 +12,10 @@ var User = new Schema({
 	facebook: {
 		id: String,
 		displayName: String
+	},
+	google: {
+		id: String,
+		displayName: String
 	}
 });
 
