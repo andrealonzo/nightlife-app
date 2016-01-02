@@ -2,6 +2,7 @@
 
 var GitHubStrategy = require('passport-github').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var User = require('../models/users');
 var configAuth = require('./auth');
 
@@ -16,15 +17,14 @@ module.exports = function (passport) {
 		});
 	});
 	
-	
-	passport.use(new FacebookStrategy({
-		clientID: configAuth.facebookAuth.clientID,
-		clientSecret: configAuth.facebookAuth.clientSecret,
-		callbackURL: configAuth.facebookAuth.callbackURL
+	passport.use(new GoogleStrategy({
+		clientID: configAuth.googleAuth.clientID,
+		clientSecret: configAuth.googleAuth.clientSecret,
+		callbackURL: configAuth.googleAuth.callbackURL
 	},
 	function (token, refreshToken, profile, done) {
 		process.nextTick(function () {
-			User.findOne({ 'github.id': profile.id }, function (err, user) {
+			User.findOne({ 'google.id': profile.id }, function (err, user) {
 				if (err) {
 					return done(err);
 				}
@@ -33,6 +33,42 @@ module.exports = function (passport) {
 					return done(null, user);
 				} else {
 					var newUser = new User();
+					
+					newUser.google.id = profile.id;
+					newUser.google.displayName = profile.displayName;
+					
+					newUser.save(function (err) {
+						if (err) {
+							throw err;
+						}
+
+						return done(null, newUser);
+					});
+				}
+			});
+		});
+	}));
+	
+	passport.use(new FacebookStrategy({
+		clientID: configAuth.facebookAuth.clientID,
+		clientSecret: configAuth.facebookAuth.clientSecret,
+		callbackURL: configAuth.facebookAuth.callbackURL
+	},
+	function (token, refreshToken, profile, done) {
+		process.nextTick(function () {
+			User.findOne({ 'facebook.id': profile.id }, function (err, user) {
+				if (err) {
+					return done(err);
+				}
+
+				if (user) {
+					return done(null, user);
+				} else {
+					var newUser = new User();
+					
+					newUser.facebook.id = profile.id;
+					newUser.facebook.displayName = profile.displayName;
+					
 					newUser.save(function (err) {
 						if (err) {
 							throw err;

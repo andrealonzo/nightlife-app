@@ -8,6 +8,10 @@ var User = new Schema({
 		displayName: String,
 		username: String,
       publicRepos: Number
+	},
+	facebook: {
+		id: String,
+		displayName: String
 	}
 });
 

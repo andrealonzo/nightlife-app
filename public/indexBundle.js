@@ -10888,6 +10888,7 @@
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var React = __webpack_require__(3);
+	var ExternalLoginOptions = __webpack_require__(75);
 	module.exports = React.createClass({displayName: "module.exports",
 			  render:function(){
 			    return(
@@ -10899,49 +10900,7 @@
 	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into Urbane Dives")
 	      ), 
 	      React.createElement("div", {className: "modal-body text-center"}, 
-	      
-	        React.createElement("div", null, 
-	        React.createElement("a", {className: "btn btn-primary btn-lg btn-block login-button", href: "/auth/facebook", role: "button"}, 
-	            React.createElement("div", {className: "row "}, 
-	              React.createElement("div", {className: "col-xs-2"}, 
-							React.createElement("i", {className: "fa fa-facebook fa-lg modal-icons"})
-							), 
-							
-	              React.createElement("div", {className: "col-xs-2"}, 
-							"LOGIN WITH FACEBOOK"
-							)
-							
-							)
-							)
-			), 
-			React.createElement("div", null, 
-			"Recommended. And we will never post anything without your permission."
-			), 
-	        React.createElement("div", null, 
-	        React.createElement("a", {className: "btn btn-danger btn-lg btn-block login-button", href: "/auth/google", role: "button"}, 
-	           React.createElement("div", {className: "row "}, 
-	              React.createElement("div", {className: "col-xs-2"}, 
-	  						React.createElement("i", {className: "fa fa-google-plus fa-lg modal-icons"})
-	  						), 
-	  						React.createElement("div", {className: "col-xs-10 text-left"}, 
-	  						"LOGIN WITH GOOGLE"
-	  						)
-							)
-							)
-			), 
-			
-	        React.createElement("div", null, 
-	        React.createElement("a", {className: "btn btn-warning btn-lg btn-block login-button", href: "/auth/github", role: "button"}, 
-	         React.createElement("div", {className: "row "}, 
-	              React.createElement("div", {className: "col-xs-2"}, 
-								React.createElement("i", {className: "fa fa-github fa-lg modal-icons"})
-								), 
-								React.createElement("div", {className: "col-xs-10 text-left"}, 
-							"LOGIN WITH GITHUB"
-							)
-							)
-							)
-			)
+	        React.createElement(ExternalLoginOptions, null)
 	      ), 
 	      React.createElement("div", {className: "modal-footer"}
 	      )
@@ -10971,6 +10930,82 @@
 	           "API provided by Yelp.com.  Site design inspired by zomato.com."
 	          )
 	        )
+	)
+			  }
+			});
+			
+
+/***/ },
+/* 75 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(3);
+	module.exports = React.createClass({displayName: "module.exports",
+			  render:function(){
+			    return(
+	        React.createElement("div", null, 
+	        React.createElement("div", null, 
+	        React.createElement("a", {className: "btn btn-primary btn-lg btn-block login-button", href: "/auth/facebook", role: "button"}, 
+	            React.createElement("div", {className: "row "}, 
+	              React.createElement("div", {className: "col-xs-2"}, 
+							React.createElement("i", {className: "fa fa-facebook fa-lg modal-icons"})
+							), 
+							
+	              React.createElement("div", {className: "col-xs-2"}, 
+							"LOGIN WITH FACEBOOK"
+							)
+							
+							)
+							)
+			), 
+			React.createElement("div", null, 
+			"Recommended.  We will never post anything without your permission."
+			), 
+	        React.createElement("div", null, 
+	        React.createElement("a", {className: "btn btn-danger btn-lg btn-block login-button", href: "/auth/google", role: "button"}, 
+	           React.createElement("div", {className: "row "}, 
+	              React.createElement("div", {className: "col-xs-2"}, 
+	  						React.createElement("i", {className: "fa fa-google-plus fa-lg modal-icons"})
+	  						), 
+	  						React.createElement("div", {className: "col-xs-10 text-left"}, 
+	  						"LOGIN WITH GOOGLE"
+	  						)
+							)
+							)
+			), 
+			
+	        React.createElement("div", null, 
+	        React.createElement("a", {className: "btn btn-warning btn-lg btn-block login-button", href: "/auth/github", role: "button"}, 
+	         React.createElement("div", {className: "row "}, 
+	              React.createElement("div", {className: "col-xs-2"}, 
+								React.createElement("i", {className: "fa fa-github fa-lg modal-icons"})
+								), 
+								React.createElement("div", {className: "col-xs-10 text-left"}, 
+							"LOGIN WITH GITHUB"
+							)
+							)
+							)
+			), 
+			React.createElement("hr", null), 
+			React.createElement("div", null, 
+			"or use your email address", 
+			React.createElement("div", {className: "row"}, 
+			  React.createElement("div", {className: "col-xs-6"}, 
+	    		React.createElement("a", {className: "btn btn-default btn-lg btn-block login-button", href: "/auth/github", role: "button"}, 
+	    		"Login"
+	    		)
+	    		), 
+			  React.createElement("div", {className: "col-xs-6"}, 
+	    		React.createElement("a", {className: "btn btn-default btn-lg btn-block login-button", href: "/auth/github", role: "button"}, 
+	    		"Signup"
+	    		)
+	    		)
+	    	)
+			)
+		)
+
 	)
 			  }
 			});

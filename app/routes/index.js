@@ -62,6 +62,16 @@ module.exports = function (app, passport) {
 			successRedirect: '/',
 			failureRedirect: '/login'
 		}));
+
+	app.route('/auth/google')
+		.get(passport.authenticate('google', 
+			{ scope: 'https://www.googleapis.com/auth/plus.login' }));
+
+	app.route('/auth/google/callback')
+		.get(passport.authenticate('google', {
+			successRedirect: '/',
+			failureRedirect: '/login'
+		}));
 		
 	app.route('/api/reservations')
 		.post(isLoggedIn, reservationHandler.addReservation)

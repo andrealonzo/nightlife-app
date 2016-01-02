@@ -34,6 +34,7 @@
     "passport": "^0.3.0",
     "passport-facebook": "^2.0.0",
     "passport-github": "^1.0.0",
+    "passport-google-oauth": "^0.2.0",
     "react": "^0.14.5",
     "react-addons-update": "^0.14.5",
     "react-dom": "^0.14.3",
