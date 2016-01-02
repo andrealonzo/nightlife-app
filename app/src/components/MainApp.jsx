@@ -59,7 +59,6 @@ module.exports =  React.createClass({
         else{
             //user not logged in
             //save search and reservation locally
-            
             localStorage.setItem('previousState', JSON.stringify({
                 location: this.state.location,
                 reservation:{

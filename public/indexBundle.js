@@ -49,11 +49,17 @@
 	var ReactDOM = __webpack_require__(1)
 	var Navigation = __webpack_require__(2)
 	var MainApp = __webpack_require__(4)
-	var Footer = __webpack_require__(78)
+	var Login = __webpack_require__(74)
+	var Footer = __webpack_require__(73)
 	ReactDOM.render(
 	        React.createElement(Navigation, null),
 	        document.getElementById('nav-container')
 	        );
+	        
+	ReactDOM.render(
+	      React.createElement(Login, null),
+	      document.getElementById('login')
+	      );
 	ReactDOM.render(
 	      React.createElement(MainApp, null),
 	      document.getElementById('main')
@@ -224,7 +230,6 @@
 	        else{
 	            //user not logged in
 	            //save search and reservation locally
-	            
 	            localStorage.setItem('previousState', JSON.stringify({
 	                location: this.state.location,
 	                reservation:{
@@ -10894,12 +10899,7 @@
 
 
 /***/ },
-/* 73 */,
-/* 74 */,
-/* 75 */,
-/* 76 */,
-/* 77 */,
-/* 78 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
@@ -10915,6 +10915,39 @@
 	           "API provided by Yelp.com.  Site design inspired by zomato.com."
 	          )
 	        )
+	)
+			  }
+			});
+			
+
+/***/ },
+/* 74 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(3);
+	module.exports = React.createClass({displayName: "module.exports",
+			  render:function(){
+			    return(
+	React.createElement("div", {className: "modal fade", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel"}, 
+	  React.createElement("div", {className: "modal-dialog", role: "document"}, 
+	    React.createElement("div", {className: "modal-content"}, 
+	      React.createElement("div", {className: "modal-header"}, 
+	        React.createElement("button", {type: "button", className: "close", "data-dismiss": "modal", "aria-label": "Close"}, React.createElement("span", {"aria-hidden": "true"}, "×")), 
+	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into Urbane Dives")
+	      ), 
+	      React.createElement("div", {className: "modal-body text-center"}, 
+	        React.createElement("a", {className: "btn btn-primary btn-lg", href: "/auth/github", role: "button"}, 
+							React.createElement("img", {src: "/public/img/github_32px.png", alt: "github logo"}), 
+							"LOGIN WITH GITHUB")
+	      ), 
+	      React.createElement("div", {className: "modal-footer"}
+	      )
+	    )
+	  )
+	)
+
 	)
 			  }
 			});
