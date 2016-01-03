@@ -2,30 +2,7 @@
 'use strict'
 var React = require("react");
 module.exports = React.createClass({
-      getInitialState:function(){
-        return {user:null};
-      },
-      componentDidMount:function(){
-        this.loadLoggedInUser();
-      },
-      loadLoggedInUser:function(){
-        var userApiUrl = "/api/user";
-       $.ajax({
-        type: "GET",
-        url: userApiUrl,
-        contentType: "application/json",
-        success: function(data){
-           console.log("user successfully retrieved", data);
-           this.setState({user:data});
-        }.bind(this),
-        error: function(data){
-          //user not logged in
-           console.log("error receiving user", data);
-            this.setState({user:null})
-                }.bind(this),
-        dataType: 'json'
-      });
-      },
+   
 		  render:function(){
 		    return(
 		      <div>
@@ -47,7 +24,7 @@ module.exports = React.createClass({
  
       </ul>
       <ul className="nav navbar-nav navbar-right">
-      <li>{this.state.user?<a href="/logout">Logout</a>:<a href="#" data-toggle="modal" data-target="#myModal">Login</a>}</li>
+      <li>{this.props.user?<a href="/logout">Logout</a>:<a href="#" data-toggle="modal" data-target="#myModal">Login</a>}</li>
       </ul>
     </div>
   </div>

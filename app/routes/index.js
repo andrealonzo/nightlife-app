@@ -85,7 +85,9 @@ module.exports = function (app, passport) {
 	app.route('/openapi/yelp')
 		.get(yelpHandler.getResults);
 		
-	app.route('/openapi/user/signup')
+	app.route('/signup')
 		.post(userHandler.signup);
+	app.route('/login')
+		.post(userHandler.login);
 		
 };

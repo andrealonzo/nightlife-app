@@ -47,43 +47,16 @@
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
 	var ReactDOM = __webpack_require__(1)
-	var Navigation = __webpack_require__(2)
+	var React = __webpack_require__(2);
+	var Navigation = __webpack_require__(3)
 	var MainApp = __webpack_require__(4)
 	var Login = __webpack_require__(73)
-	var Footer = __webpack_require__(74)
-	ReactDOM.render(
-	        React.createElement(Navigation, null),
-	        document.getElementById('nav-container')
-	        );
-	        
-	ReactDOM.render(
-	      React.createElement(Login, null),
-	      document.getElementById('login')
-	      );
-	ReactDOM.render(
-	      React.createElement(MainApp, null),
-	      document.getElementById('main')
-	      );
-	ReactDOM.render(
-	      React.createElement(Footer, null),
-	      document.getElementById('footer')
-	      );
-	      
+	var Footer = __webpack_require__(78)
 
-/***/ },
-/* 1 */
-/***/ function(module, exports) {
-
-	module.exports = ReactDOM;
-
-/***/ },
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(3);
-	module.exports = React.createClass({displayName: "module.exports",
+	var App = React.createClass({displayName: "App",
+	      handleLogin:function(){
+	        location.reload();
+	      },
 	      getInitialState:function(){
 	        return {user:null};
 	      },
@@ -108,6 +81,45 @@
 	        dataType: 'json'
 	      });
 	      },
+	      render:function(){
+	            return(
+	                  React.createElement("div", null, 
+	                        React.createElement(Navigation, {user: this.state.user}), 
+	                        React.createElement(Login, {onLogin: this.handleLogin}), 
+	                        React.createElement(MainApp, {user: this.state.user}), 
+	                        React.createElement(Footer, null)
+	                  )
+	                  )
+	      }
+	});
+
+
+	ReactDOM.render(
+	        React.createElement(App, null),
+	        document.getElementById('app')
+	        );
+
+/***/ },
+/* 1 */
+/***/ function(module, exports) {
+
+	module.exports = ReactDOM;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	module.exports = React;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	module.exports = React.createClass({displayName: "module.exports",
+	   
 			  render:function(){
 			    return(
 			      React.createElement("div", null, 
@@ -129,7 +141,7 @@
 	 
 	      ), 
 	      React.createElement("ul", {className: "nav navbar-nav navbar-right"}, 
-	      React.createElement("li", null, this.state.user?React.createElement("a", {href: "/logout"}, "Logout"):React.createElement("a", {href: "#", "data-toggle": "modal", "data-target": "#myModal"}, "Login"))
+	      React.createElement("li", null, this.props.user?React.createElement("a", {href: "/logout"}, "Logout"):React.createElement("a", {href: "#", "data-toggle": "modal", "data-target": "#myModal"}, "Login"))
 	      )
 	    )
 	  )
@@ -143,18 +155,12 @@
 			
 
 /***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	module.exports = React;
-
-/***/ },
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
-	var React = __webpack_require__(3);
+	var React = __webpack_require__(2);
 	var Yelp = __webpack_require__(5);
 	var Business = __webpack_require__(68)
 	var css = __webpack_require__(69);
@@ -173,9 +179,10 @@
 	                success: function(businessId, data){
 	                    var businesses = this.state.businesses;
 	                    var index= businesses.map(function(e) { return e.id; }).indexOf(businessId);
-	                    businesses[index].user_reservations = data.user_reservations;
-	                    this.setState({businesses:businesses});
-	                   console.log("reservation successful", data);
+	                    if(index != -1){
+	                        businesses[index].user_reservations = data.user_reservations;
+	                        this.setState({businesses:businesses});
+	                    }
 	                        }.bind(this, businessId),
 	                error: function(data){
 	                   console.log("error receiving data", data);
@@ -207,7 +214,7 @@
 	    },
 	    handleReservationChange:function(e, businessId){
 	        //check if user is logged in
-	        if(this.state.user._id){
+	        if(this.props.user){
 	            this.makeReservation(businessId, e.target.value);
 	        }
 	        else{
@@ -222,22 +229,6 @@
 	            $('#myModal').modal();  
 	        }
 	    },
-	    loadLoggedInUser:function(){
-	        var userApiUrl = "/api/user";
-	       $.ajax({
-	        type: "GET",
-	        url: userApiUrl,
-	        contentType: "application/json",
-	        success: function(data){
-	           console.log("user successfully retrieved", data);
-	           this.setState({user:data});
-	        }.bind(this),
-	        error: function(data){
-	          //user not logged in
-	                }.bind(this),
-	        dataType: 'json'
-	      });
-	      },
 	    handleSubmit:function(e){
 	        e.preventDefault();
 	        this.search(this.state.location);
@@ -309,9 +300,6 @@
 	    },
 	  getInitialState: function() {
 	    return {
-	      user: {
-	          _id:null
-	      },
 	      searchInput: 'nightlife',
 	      businesses: [],
 	      location: '',
@@ -319,7 +307,6 @@
 	    };
 	  },
 	  componentDidMount: function() {
-	      this.loadLoggedInUser();
 	      var previousState = JSON.parse(localStorage.getItem('previousState'));
 
 
@@ -347,7 +334,7 @@
 	                React.createElement("div", {className: "col-md-1"}
 	                ), 
 	                React.createElement("div", {className: "col-md-10"}, 
-	                    React.createElement(Business, {business: business, user: this.state.user, onNeedLogin: this.handleNeedLogin, onReservationChange: this.handleReservationChange})
+	                    React.createElement(Business, {business: business, user: this.props.user, onNeedLogin: this.handleNeedLogin, onReservationChange: this.handleReservationChange})
 	                 ), 
 	                React.createElement("div", {className: "col-md-1"}
 	                )
@@ -10462,7 +10449,7 @@
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
-	var React = __webpack_require__(3);
+	var React = __webpack_require__(2);
 
 	module.exports =  React.createClass({displayName: "module.exports",
 	    
@@ -10473,6 +10460,13 @@
 	        return(
 	            React.createElement("div", {key: index}, addressPortion)
 	            );
+	    },
+	    getDefaultProps: function() {
+	        return {
+	          user:{
+	              _id:0
+	          }
+	        };
 	    },
 
 	    render:function(){
@@ -10502,8 +10496,8 @@
 	                    this.props.business.user_reservations.length, " ", this.props.business.user_reservations.length != 1? "people": "person", " going"
 	         
 	                  ), 
-	                React.createElement("select", {name: this.props.business.id, value: 
-	                this.props.business.user_reservations.indexOf(this.props.user._id) > -1, 
+	                React.createElement("select", {name: this.props.business.id, value: this.props.user &&
+	                (this.props.business.user_reservations.indexOf(this.props.user._id) > -1), 
 	                className: "form-control", onChange: this.handleReservationChange}, 
 	                  React.createElement("option", {value: "false"}, "Not Going"), 
 	                  React.createElement("option", {value: "true"}, "Going")
@@ -10887,56 +10881,106 @@
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
-	var React = __webpack_require__(3);
-	var ExternalLoginOptions = __webpack_require__(75);
-	var Signup = __webpack_require__(76);
+	var React = __webpack_require__(2);
+	var ExternalLoginOptions = __webpack_require__(74);
+	var Signup = __webpack_require__(75);
 	var LocalLogin = __webpack_require__(77);
 
 	module.exports = React.createClass({displayName: "module.exports",
-	      handleSignupSubmit:function(signup){
-	        console.log(signup);
+	      handleDisplayErrors:function(){
+	        this.setState({errors:[]})
 	      },
-	      handleLoginSubmit:function(login){
-	        console.log(login);
+	      
+	      handleSignupSubmit:function(signupData){
+	        var apiUrl = "/signup";
+	        $.ajax({
+	          url: apiUrl,
+	          dataType: 'json',
+	          type: 'POST',
+	          data: signupData,
+	          success: function(data) {
+	            this.setState({
+	              showPage:"LocalLogin",
+	              message:{
+	                msg: "Registration successful! Please log in.",
+	                type:"success"
+	            }});
+	          }.bind(this),
+	          error: function(err) {
+	            this.setState({message:{
+	              msg: err.responseJSON.msg,
+	              type:"error"
+	            }});
+	          }.bind(this)
+	        });
+	      },
+	      handleLoginSubmit:function(loginData){
+	        
+	        var apiUrl = "/login";
+	        $.ajax({
+	          url: apiUrl,
+	          dataType: 'json',
+	          type: 'POST',
+	          data: loginData,
+	          success: function(data) {
+	            this.props.onLogin();
+	            this.setState({
+	              showPage:"LocalLogin",
+	              message:{
+	                msg: "Login successful!",
+	                type:"success"
+	            }});
+	          }.bind(this),
+	          error: function(err) {
+	            this.setState({message:{
+	              msg: err.responseJSON.msg,
+	              type:"error"
+	            }});
+	          }.bind(this)
+	        });
 	      },
 	      handleBackClickOnLocalLogin:function(){
-	        this.setState({showPage:"ExternalLoginOptions"});
+	        this.setState({showPage:"ExternalLoginOptions",message:{}});
 	      },
 	      handleBackClickOnSignup:function(){
-	        this.setState({showPage:"ExternalLoginOptions"});
+	        this.setState({showPage:"ExternalLoginOptions",message:{}});
 	      },
 	      handleLoginClick:function(){
-	        this.setState({showPage:"LocalLogin"});
+	        this.setState({showPage:"LocalLogin",message:{}});
 	      },
 	      handleSignupClick:function(){
-	        this.setState({showPage:"Signup"});
+	        this.setState({showPage:"Signup",message:{}});
 	      },
 
 	      getInitialState:function(){
 	        return({
-	          showPage:"ExternalLoginOptions"
+	          showPage:"ExternalLoginOptions",
+	          messages:{}
 	        });
 	      },
 			  render:function(){
 			    return(
 	React.createElement("div", {className: "modal fade", id: "myModal", tabIndex: "-1", role: "dialog", "aria-labelledby": "myModalLabel"}, 
 	  React.createElement("div", {className: "modal-dialog modal-sm", role: "document"}, 
-	        this.state.showPage==='ExternalLoginOptions'?
-	          React.createElement(ExternalLoginOptions, {
-	            onSignupClick: this.handleSignupClick, 
-	            onLoginClick: this.handleLoginClick}
+	        this.state.showPage==='LocalLogin'?
+	          React.createElement(LocalLogin, {
+	            onBackClick: this.handleBackClickOnLocalLogin, 
+	            onSubmit: this.handleLoginSubmit, 
+	            message: this.state.message
+	            }
 	          ):
 	          this.state.showPage==="Signup"?
 	          React.createElement(Signup, {
 	            onBackClick: this.handleBackClickOnSignup, 
-	            onSubmit: this.handleSignupSubmit
+	            onSubmit: this.handleSignupSubmit, 
+	            message: this.state.message
 	            }
 	          ):
-	          React.createElement(LocalLogin, {
-	            onBackClick: this.handleBackClickOnLocalLogin, 
-	            onSubmit: this.handleLoginSubmit
-	            }
+	          React.createElement(ExternalLoginOptions, {
+	            onSignupClick: this.handleSignupClick, 
+	            onLoginClick: this.handleLoginClick}
 	          )
+	          
 	        
 	        
 	  )
@@ -10953,29 +10997,7 @@
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
-	var React = __webpack_require__(3);
-	module.exports = React.createClass({displayName: "module.exports",
-	    
-			  render:function(){
-			    return(
-			      
-			React.createElement("nav", {className: "navbar navbar-default"}, 
-	          React.createElement("div", {className: "container text-center"}, 
-	           "API provided by Yelp.com.  Site design inspired by zomato.com."
-	          )
-	        )
-	)
-			  }
-			});
-			
-
-/***/ },
-/* 75 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/** @jsx React.DOM *//** @jsx React.DOM */
-	'use strict'
-	var React = __webpack_require__(3);
+	var React = __webpack_require__(2);
 	module.exports = React.createClass({displayName: "module.exports",
 			  render:function(){
 			    return(
@@ -11056,12 +11078,13 @@
 			
 
 /***/ },
-/* 76 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
-	var React = __webpack_require__(3);
+	var React = __webpack_require__(2);
+	var Message = __webpack_require__(76);
 	module.exports = React.createClass({displayName: "module.exports",
 	      handleSubmit:function(e){
 	        e.preventDefault();
@@ -11091,6 +11114,7 @@
 	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Register")
 	      ), 
 	      React.createElement("div", {className: "modal-body text-left"}, 
+	          React.createElement(Message, {message: this.props.message}), 
 	            React.createElement("form", {onSubmit: this.handleSubmit}, 
 	          React.createElement("div", {className: "form-group"}, 
 	            React.createElement("label", null, "Email address"), 
@@ -11130,12 +11154,36 @@
 			
 
 /***/ },
+/* 76 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	module.exports = React.createClass({displayName: "module.exports",
+			  render:function(){
+			    if(this.props.message.msg)
+			    {
+			      return  React.createElement("div", {className: "alert animated fadeIn " + (this.props.message.type==="error"?
+	                              "alert-danger":
+	                              "alert-success"), 
+	                            role: "alert"}, this.props.message.msg)
+			    }
+			    else{
+			      return React.createElement("div", null)
+			    }
+			  }
+			});
+			
+
+/***/ },
 /* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 	'use strict'
-	var React = __webpack_require__(3);
+	var React = __webpack_require__(2);
+	var Message = __webpack_require__(76);
 	module.exports = React.createClass({displayName: "module.exports",
 	      handleSubmit:function(e){
 	        e.preventDefault();
@@ -11161,6 +11209,7 @@
 	        React.createElement("h4", {className: "modal-title text-center", id: "myModalLabel"}, "Log Into Urbane Dives")
 	      ), 
 	      React.createElement("div", {className: "modal-body text-left"}, 
+	          React.createElement(Message, {message: this.props.message}), 
 	            React.createElement("form", {onSubmit: this.handleSubmit}, 
 	          React.createElement("div", {className: "form-group"}, 
 	            React.createElement("label", null, "Email address"), 
@@ -11185,6 +11234,28 @@
 	      )
 	    )
 
+	)
+			  }
+			});
+			
+
+/***/ },
+/* 78 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+	'use strict'
+	var React = __webpack_require__(2);
+	module.exports = React.createClass({displayName: "module.exports",
+	    
+			  render:function(){
+			    return(
+			      
+			React.createElement("nav", {className: "navbar navbar-default"}, 
+	          React.createElement("div", {className: "container text-center"}, 
+	           "API provided by Yelp.com.  Site design inspired by zomato.com."
+	          )
+	        )
 	)
 			  }
 			});

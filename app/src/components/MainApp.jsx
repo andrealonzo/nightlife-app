@@ -19,9 +19,10 @@ module.exports =  React.createClass({
                 success: function(businessId, data){
                     var businesses = this.state.businesses;
                     var index= businesses.map(function(e) { return e.id; }).indexOf(businessId);
-                    businesses[index].user_reservations = data.user_reservations;
-                    this.setState({businesses:businesses});
-                   console.log("reservation successful", data);
+                    if(index != -1){
+                        businesses[index].user_reservations = data.user_reservations;
+                        this.setState({businesses:businesses});
+                    }
                         }.bind(this, businessId),
                 error: function(data){
                    console.log("error receiving data", data);
@@ -53,7 +54,7 @@ module.exports =  React.createClass({
     },
     handleReservationChange:function(e, businessId){
         //check if user is logged in
-        if(this.state.user._id){
+        if(this.props.user){
             this.makeReservation(businessId, e.target.value);
         }
         else{
@@ -68,22 +69,6 @@ module.exports =  React.createClass({
             $('#myModal').modal();  
         }
     },
-    loadLoggedInUser:function(){
-        var userApiUrl = "/api/user";
-       $.ajax({
-        type: "GET",
-        url: userApiUrl,
-        contentType: "application/json",
-        success: function(data){
-           console.log("user successfully retrieved", data);
-           this.setState({user:data});
-        }.bind(this),
-        error: function(data){
-          //user not logged in
-                }.bind(this),
-        dataType: 'json'
-      });
-      },
     handleSubmit:function(e){
         e.preventDefault();
         this.search(this.state.location);
@@ -155,9 +140,6 @@ module.exports =  React.createClass({
     },
   getInitialState: function() {
     return {
-      user: {
-          _id:null
-      },
       searchInput: 'nightlife',
       businesses: [],
       location: '',
@@ -165,7 +147,6 @@ module.exports =  React.createClass({
     };
   },
   componentDidMount: function() {
-      this.loadLoggedInUser();
       var previousState = JSON.parse(localStorage.getItem('previousState'));
 
 
@@ -193,7 +174,7 @@ module.exports =  React.createClass({
                 <div className="col-md-1">
                 </div>
                 <div className="col-md-10">
-                    <Business business = {business} user={this.state.user} onNeedLogin={this.handleNeedLogin} onReservationChange={this.handleReservationChange}></Business>
+                    <Business business = {business} user={this.props.user} onNeedLogin={this.handleNeedLogin} onReservationChange={this.handleReservationChange}></Business>
                  </div>
                 <div className="col-md-1">
                 </div>

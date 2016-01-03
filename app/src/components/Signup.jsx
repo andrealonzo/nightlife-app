@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 'use strict'
 var React = require("react");
+var Message = require("./Message");
 module.exports = React.createClass({
       handleSubmit:function(e){
         e.preventDefault();
@@ -30,6 +31,7 @@ module.exports = React.createClass({
         <h4 className="modal-title text-center" id="myModalLabel">Register</h4>
       </div>
       <div className="modal-body text-left">
+          <Message message={this.props.message}></Message>
             <form onSubmit = {this.handleSubmit}>
           <div className="form-group">
             <label >Email address</label>

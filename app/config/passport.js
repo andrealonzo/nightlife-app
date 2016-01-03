@@ -3,6 +3,7 @@
 var GitHubStrategy = require('passport-github').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var LocalStrategy = require('passport-local').Strategy;
 var User = require('../models/users');
 var configAuth = require('./auth');
 
@@ -113,4 +114,44 @@ module.exports = function (passport) {
 			});
 		});
 	}));
+	
+	
+/**
+ * Sign in using Email and Password.
+//  */
+// passport.use(new LocalStrategy({ usernameField: 'email' }, function(email, password, done) {
+//   email = email.toLowerCase();
+//   User.findOne({ email: email }, function(err, user) {
+//     if (!user) {
+//       return done(null, false, { message: 'Email ' + email + ' not found'});
+//     }
+//     user.comparePassword(password, function(err, isMatch) {
+//       if (isMatch) {
+//         return done(null, user);
+//       } else {
+//         return done(null, false, { message: 'Invalid email or password.' });
+//       }
+//     });
+//   });
+// }));
+
+passport.use(new LocalStrategy({ usernameField: 'email' },
+  function(email, password, done) {
+    User.findOne({ email: email }, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Email not found' });
+      }
+      user.comparePassword(password, function(err, isMatch) {
+	      if (isMatch) {
+		        return done(null, user);
+		      } else {
+		        return done(null, false, { message: 'Invalid password.' });
+		      }
+	  });
+    });
+  }
+));
+	
+	
 };

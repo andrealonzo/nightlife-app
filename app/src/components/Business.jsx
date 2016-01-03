@@ -12,6 +12,13 @@ module.exports =  React.createClass({
             <div key={index}>{addressPortion}</div>
             );
     },
+    getDefaultProps: function() {
+        return {
+          user:{
+              _id:0
+          }
+        };
+    },
 
     render:function(){
         return(
@@ -40,8 +47,8 @@ module.exports =  React.createClass({
                     {this.props.business.user_reservations.length} {this.props.business.user_reservations.length != 1? "people": "person" } going
          
                   </h4>  
-                <select name={this.props.business.id} value={
-                this.props.business.user_reservations.indexOf(this.props.user._id) > -1
+                <select name={this.props.business.id} value={this.props.user &&
+                (this.props.business.user_reservations.indexOf(this.props.user._id) > -1)
                 } className="form-control" onChange = {this.handleReservationChange}>
                   <option value="false">Not Going</option>
                   <option value ="true">Going</option>
